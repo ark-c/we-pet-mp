@@ -14,6 +14,7 @@
     });
 </script>
 
-<style>
+<style lang="less">
     /*每个页面公共css */
+	@import "./theme/index.less";
 </style>
