@@ -26,7 +26,7 @@
 
 		},
 		methods: {
-			getUser($event: any) {
+			getUser($event: any): void {
 				console.log($event)
 				if ($event.detail.errMsg === 'getUserInfo:ok') {
 					this.userInfo = $event.detail.userInfo

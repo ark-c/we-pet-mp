@@ -12,5 +12,27 @@
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "./static/images/activity.png",
+				"text": "",
+				"selectedIconPath": "./static/images/activity-active.png"
+			},
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "./static/images/add.png",
+				"text": "",
+				"selectedIconPath": "./static/images/add.png"
+			},
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "./static/images/mine.png",
+				"text": "",
+				"selectedIconPath": "./static/images/mine-active.png"
+			}
+		]
 	}
 }
