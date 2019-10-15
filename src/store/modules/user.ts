@@ -1,44 +1,59 @@
+import { GetterTree, Module, MutationTree } from 'vuex';
+import { ProfileState, RootState, User } from '../types';
+
 declare const uni: any;
-const userInfo = {
-	nickName: 'hi~ 等你很久了！', // 昵称
+
+const namespaced: boolean = true;
+const userInfo: User = {
+	nickName: 'we-pet', // 昵称
 	phone: '', // 手机号
-	avatar: '', // 头像
+	avatarUrl: '', // 头像
 	gender: 'man', // 性别
 	session: uni.getStorageSync('session') || '', // 临时凭证
 	token: '', // 登录token
-	openId: uni.getStorageSync('openId') || '', // openId
-	uid: '', // 登录uid
-	redirect: '' // 重定向地址
+	openId: uni.getStorageSync('openId') || '' // openId
+};
+const cacheUserInfo: any = uni.getStorageSync('userInfo') || {};
+const state: User = {
+	...userInfo,
+	...cacheUserInfo
 };
 
-const user = {
-	state: {
-		userInfo: uni.getStorageSync('userInfo') || {
-			...userInfo
-		}
-	},
-	mutations: {
-
-		// /**
-		//  *  更新登录用户信息
-		//  * @param state
-		//  * @param payload
-		//  * @constructor
-		//  */
-		// UPDATE_USER(state, payload) {
-		// 	state.userInfo = Object.assign({}, state.userInfo, payload);
-		// },
-		//
-		// /**
-		//  *  清除登录信息
-		//  * @param {*} state
-		//  */
-		// CLEAR_USER(state) {
-		// 	Object.keys(userInfo).forEach(item => {
-		// 		state.userInfo[item] = userInfo[item] || '';
-		// 	});
-		// }
+const getters: GetterTree<User, RootState> = {
+	user(state): User {
+		return state;
 	}
+};
+
+const mutations: MutationTree<User> = {
+	/**
+	 * 更新登录用户信息
+	 * @param state
+	 * @param payLoad
+	 * @constructor
+	 */
+	UPDATE_USER(state, payLoad: User) {
+		state = Object.assign({}, state, payLoad);
+	},
+
+	/**
+	 *  清除登录信息
+	 * @param {*} state
+	 */
+	CLEAR_USER(state) {
+		Object.keys(userInfo).forEach(item => {
+			// @ts-ignore
+			state.userInfo[item] = userInfo[item] || '';
+		});
+	}
+
+};
+
+const user: Module<User, RootState> = {
+	namespaced,
+	state,
+	getters,
+	mutations
 };
 
 export default user;
