@@ -10,9 +10,8 @@ export interface User {
 	session: string; // 临时凭证
 	token?: string; // 登录token
 	openId?: string; // openId
-}
-
-export interface ProfileState {
-	userInfo: User;
-	error?: boolean;
+	city?: string; // 城市
+	country?: string; // 国家
+	language?: string; // 语言
+	province?: string; // 省份
 }

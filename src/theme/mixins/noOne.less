@@ -1,0 +1,28 @@
+// ######## border ########
+.border-half {
+	border-radius: 50%;
+}
+.base-circle(@diameter) {
+	width: @diameter;
+	height: @diameter;
+	.border-half;
+}
+
+// width、height
+.base-square(@sideLength) {
+	width: @sideLength;
+	height: @sideLength;
+}
+
+// ######## Text overflow ########
+.text-overflow() {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.multi-overflow(@line : 2) {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: @line;
+	overflow: hidden;
+}

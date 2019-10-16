@@ -1,0 +1,28 @@
+// ----------grid layout----------
+
+.flex(@flex) {
+	flex: @flex;
+}
+.flex-box() {
+	display: flex;
+}
+.flex-flow(@flex) {
+	flex-flow: @flex;
+}
+.flex-align(@flex) {
+	align-items: @flex;
+}
+.flex-direction(@flex:column) {
+	flex-direction: @flex;
+}
+.flex-wrap(@flex) {
+	flex-wrap: @flex;
+}
+.flex-justify(@flex) {
+	justify-content: @flex;
+}
+.flex-box-align-justify(@justify,@align) {
+	.flex-box();
+	.flex-justify(@justify);
+	.flex-align(@align);
+}

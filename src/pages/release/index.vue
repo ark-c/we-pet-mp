@@ -18,27 +18,14 @@
 
 	@Component
 	export default class Index extends Vue {
-		@Getter('user', { namespace: 'user' }) user!: User;
+		@Getter('user', { namespace: 'user' }) userInfo: User;
 		title: string = 'hello';
-		userInfo: any = {
-			avatarUrl: '../../static/logo.png'
-		};
 
 		/**
 		 * 授权用户信息
 		 * @param $event
 		 */
-		getUser($event: any): void {
-			console.log($event);
-			if ($event.detail.errMsg === 'getUserInfo:ok') {
-				this.userInfo = $event.detail.userInfo;
-				// this.UPDATE_USER(this.userInfo)
-			}
-		};
-
-		mounted() {
-			console.log('=======', this.user);
-		}
+		getUser($event: any): void {};
 	}
 </script>
 

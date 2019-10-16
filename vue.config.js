@@ -8,10 +8,13 @@ module.exports = {
     pluginOptions: {
         'style-resources-loader': {
             preProcessor: 'less',
-            patterns: [path.resolve(__dirname, 'src/theme/variables.less')]
+            patterns: [path.resolve(__dirname, 'src/theme/mixins/*.less')]
         }
     },
     chainWebpack: config => {
-        config.resolve.alias.set('@', resolve('src')) // 设置别名
+        // 设置别名
+        config.resolve.alias
+            .set('@', resolve('src'))
+            .set('@components', resolve('src/pages/components/'))
     }
 }
