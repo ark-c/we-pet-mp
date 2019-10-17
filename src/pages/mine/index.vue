@@ -1,12 +1,6 @@
 <template>
 	<view class="content">
-		<image class="logo" :src="userInfo.avatarUrl"></image>
-		<view>
-			<text class="title">{{title}}</text>
-		</view>
-		<view>
-			<button class="title" open-type="getUserInfo" @getuserinfo="getUser">{{title}}</button>
-		</view>
+
 	</view>
 </template>
 
@@ -14,8 +8,7 @@
 	import Vue from 'vue';
 	import Component from 'vue-class-component'
 
-	@Component({})
-
+	@Component
 	export default class Index extends Vue {
 		title: string = 'hello';
 		userInfo: any = {

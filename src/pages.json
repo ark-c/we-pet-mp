@@ -3,7 +3,15 @@
 		{
 			"path": "pages/preview/index",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "home",
+				"navigationBarBackgroundColor": "#EC6863",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/preview/petDetail",
+			"style": {
+				"navigationStyle": "custom"
 			}
 		},
 		{

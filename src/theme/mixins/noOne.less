@@ -20,9 +20,29 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-.multi-overflow(@line : 2) {
+.multi-overflow(@line: 2) {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: @line;
 	overflow: hidden;
 }
+
+// ######## font size ########
+.base-font(@fontSize: 24px) {
+	font-size: @fontSize;
+}
+
+// ######## margin ########
+.base-margin-left(@length) {
+	margin-left: @length;
+}
+.base-margin-right(@length) {
+	margin-right: @length;
+}
+.base-margin-top(@length) {
+	margin-top: @length;
+}
+.base-margin-bottom(@length) {
+	margin-bottom: @length;
+}
+

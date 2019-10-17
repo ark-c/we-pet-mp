@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
-		<block v-for="(item, index) in 1" :key="index">
-			<pet-item></pet-item>
+		<block v-for="(item, index) in 2" :key="index">
+			<pet-item :petInfo="item" class="u-mg-b-20"></pet-item>
 		</block>
 	</view>
 </template>
@@ -20,7 +20,6 @@
 			petItem
 		}
 	})
-	@Component
 	export default class Index extends Vue {
 		@Getter('user', { namespace }) userInfo: User;
 		@Mutation('UPDATE_USER', { namespace }) updateUser: any;
