@@ -15,6 +15,6 @@ module.exports = {
         // 设置别名
         config.resolve.alias
             .set('@', resolve('src'))
-            .set('@components', resolve('src/pages/components/'))
+            .set('@components', resolve('src/pages/components'))
     }
 }

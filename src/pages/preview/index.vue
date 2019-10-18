@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+		<NavBar></NavBar>
 		<block v-for="(item, index) in 2" :key="index">
 			<pet-item :petInfo="item" class="u-mg-b-20"></pet-item>
 		</block>
