@@ -4,6 +4,7 @@
         mpType: 'app',
         onLaunch(): void {
             console.log('App Launch')
+	        this.$store.commit('user/USER_LOGIN')
         },
         onShow(): void {
             console.log('App Show')

@@ -10,7 +10,7 @@
 			</view>
 			<text class="u-fz-large">today</text>
 		</view>
-		<view class="item-content">
+		<view class="item-content" @click="emitDetail">
 			<view class="name u-mg-t-40 u-mg-b-20 u-fz-big">
 				<text>name</text>
 				<text>(3-5month)</text>
@@ -63,7 +63,14 @@
 	};
 	@Component
 	export default class PetItem extends Vue {
-		@Prop({ required: false, default: petInfo }) petInfo: any;
+		// @Prop({ required: false, default: petInfo }) petInfo: any;
+
+		/**
+		 * 单项点击
+		 */
+		emitDetail() {
+			this.$emit('detailClick')
+		}
 	}
 </script>
 

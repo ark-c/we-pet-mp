@@ -1,5 +1,6 @@
 import { GetterTree, Module, MutationTree } from 'vuex';
 import { User } from '../types';
+import { apiLogin } from '@/service/api';
 
 declare const uni: any;
 
@@ -31,7 +32,7 @@ const mutations: MutationTree<User> = {
 	 */
 	UPDATE_USER(state, payLoad: User) {
 		Object.assign(state, payLoad);
-		uni.setStorageSync('userInfo', state)
+		uni.setStorageSync('userInfo', state);
 	},
 
 	/**
@@ -42,6 +43,18 @@ const mutations: MutationTree<User> = {
 		Object.keys(userInfo).forEach(item => {
 			// @ts-ignore
 			state[item] = userInfo[item] || '';
+		});
+	},
+
+	/**
+	 * 登录
+	 */
+	USER_LOGIN(state) {
+		uni.login({
+			success: async (res: any) => {
+				if (!res.code) return;
+				const result = await apiLogin(res.code);
+			}
 		});
 	}
 

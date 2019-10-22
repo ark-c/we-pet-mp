@@ -1,46 +1,44 @@
 <template>
-	<view class="content">
+	<view class="mine-wrap">
+		<view class="header">
+			<view class="">
+				<image></image>
+				<view>Merlin</view>
+			</view>
+			<view class="tab">
+				<view class="" v-if="activeTab === 0" @click="activeTab = 0"></view>
+				<view class="" v-if="activeTab === 1" @click="activeTab = 1"></view>
+			</view>
+		</view>
 
+		<view class="content">
+			<block v-if="true">
+				<pet-item></pet-item>
+			</block>
+		</view>
 	</view>
 </template>
 
 <script lang="ts">
 	import Vue from 'vue';
-	import Component from 'vue-class-component'
+	import { Component } from 'vue-property-decorator';
+	import PetItem from '@components/petItem.vue';
 
-	@Component
+	@Component({
+		components: { PetItem }
+	})
 	export default class Index extends Vue {
-		title: string = 'hello';
-		userInfo: any = {
-			avatarUrl: '../../static/logo.png'
+		activeTab: number = 0;
+
+		created() {
+			this.initData();
 		};
 
-		/**
-		 * 授权用户信息
-		 * @param $event
-		 */
-		getUser($event: any): void {
-			console.log($event);
-			if ($event.detail.errMsg === 'getUserInfo:ok') {
-				this.userInfo = $event.detail.userInfo;
-				// this.UPDATE_USER(this.userInfo)
-			}
+		initData() {
+			console.log('=====');
 		}
 	}
 </script>
 
-<style lang="less">
-	.content {
-		text-align: center;
-		height: 400px;
-	}
-	.logo {
-		height: 200px;
-		width: 200px;
-		margin-top: 200px;
-	}
-	.title {
-		font-size: 36px;
-		color: @uni-color-warning;
-	}
+<style lang="less" scoped>
 </style>

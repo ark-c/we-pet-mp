@@ -9,8 +9,8 @@ const exceptionCode: Array<number> = [100001, 100006, 100105, 900211, 500501]; /
 let httpCount: number = 0; // 请求次数
 
 interface HttpOptions {
-	method: string; // 请求方法
-	url: string; // 请求地址
+	method?: string; // 请求方法
+	url?: string; // 请求地址
 	intercept?: boolean; // 是否开启统一错误处理
 	localUrl?: boolean;     // 是否本地url，false: 根据配置文件 url会被重写, true: url保持原样不变
 	header?: any;          // 头信息
@@ -33,8 +33,8 @@ interface HttpOptions {
 const formatUrl = (url: string) => {
 	let baseUrl: string = '';
 	url = url.replace(/\/\//g, '/');
-	if (process.env && process.env.BASE_URI) {
-		baseUrl = process.env.BASE_URI;
+	if (process.env ) { // TODO
+		baseUrl = '';
 		if (baseUrl.endsWith('/')) { // 判断是否作为结尾
 			baseUrl = baseUrl.substring(0, baseUrl.length - 1);
 		}
@@ -43,6 +43,7 @@ const formatUrl = (url: string) => {
 		baseUrl += '/';
 	}
 	baseUrl += url;
+	console.log(baseUrl, 'baseUrl');
 	return baseUrl;
 };
 
@@ -110,6 +111,7 @@ const request = (method: string, url: string, params: any, options: HttpOptions)
 		intercept: true     // 是否拦截
 		// responseType: 'json'	// 响应格式: 可选项 'arraybuffer', 'blob', 'document', 'json', 'text', 'stream' 支付宝小程序不支持
 	}, options, { method, url });
+	console.log(options, '====')
 	return new Promise((resolve, reject) => {
 		const sendOptions: HttpOptions = {
 			method: options.method,
@@ -172,7 +174,7 @@ const request = (method: string, url: string, params: any, options: HttpOptions)
  * @param options 参数 [可选]
  * @returns {Promise}
  */
-export const get = (url: string, params: object = {}, options: HttpOptions) => request('get', url, params, options);
+export const get = (url: string, params: object = {}, options: HttpOptions = {}) => request('get', url, params, options);
 
 /**
  * post请求
@@ -181,7 +183,7 @@ export const get = (url: string, params: object = {}, options: HttpOptions) => r
  * @param options 参数 [可选]
  * @returns {Promise}
  */
-export const post = (url: string, params: object = {}, options: HttpOptions) => request('post', url, params, options);
+export const post = (url: string, params: object = {}, options: HttpOptions = {}) => request('post', url, params, options);
 
 /**
  * patch请求
@@ -190,7 +192,7 @@ export const post = (url: string, params: object = {}, options: HttpOptions) => 
  * @param options 参数 [可选]
  * @returns {Promise}
  */
-export const patch = (url: string, params: object = {}, options: HttpOptions) => request('patch', url, params, options);
+export const patch = (url: string, params: object = {}, options: HttpOptions = {}) => request('patch', url, params, options);
 
 /**
  * put请求
@@ -199,7 +201,7 @@ export const patch = (url: string, params: object = {}, options: HttpOptions) =>
  * @param options 参数 [可选]
  * @returns {Promise}
  */
-export const put = (url: string, params: object = {}, options: HttpOptions) => request('put', url, params, options);
+export const put = (url: string, params: object = {}, options: HttpOptions = {}) => request('put', url, params, options);
 
 /**
  * delete请求
@@ -208,4 +210,4 @@ export const put = (url: string, params: object = {}, options: HttpOptions) => r
  * @param options 参数 [可选]
  * @returns {Promise}
  */
-export const del = (url: string, params: object = {}, options: HttpOptions) => request('delete', url, params, options);
+export const del = (url: string, params: object = {}, options: HttpOptions = {}) => request('delete', url, params, options);

@@ -2,7 +2,7 @@
 	<view class="nav-bar-wrap" :style="{'background': config.backgroundColor, 'color': config.color}">
 		<slot v-if="config.customBack" name="customBack" class="back-item"></slot>
 		<view class="back-item" v-if="!config.customBack" @click="localBack">s</view>
-		<text class="title">{{title}}</text>
+		<text class="title">{{config.title}}</text>
 	</view>
 </template>
 
@@ -18,7 +18,7 @@
 	}
 	@Component
 	export default class NavBar extends Vue {
-		@Prop({default: defaultConfig, required: false}) config: NavBarOptions;
+		@Prop({default: defaultConfig, required: false}) config: NavBarOptions = defaultConfig;
 
 		/**
 		 * 默认返回上一页

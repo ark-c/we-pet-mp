@@ -2,17 +2,18 @@
 	<view class="content">
 		<NavBar></NavBar>
 		<block v-for="(item, index) in 2" :key="index">
-			<pet-item :petInfo="item" class="u-mg-b-20"></pet-item>
+			<pet-item :petInfo="item" @detailClick="toDetail"></pet-item>
 		</block>
 	</view>
 </template>
 
 <script lang="ts">
 	import Vue from 'vue';
-	import Component from 'vue-class-component';
+	import { Component } from 'vue-property-decorator'
 	import { Getter, Mutation } from 'vuex-class';
 	import { User } from '@/store/types';
 	import petItem from '@components/petItem.vue';
+	import { uNavigateTo } from '@/utils/navigateAction'
 
 	const namespace: string = 'user';
 
@@ -33,6 +34,13 @@
 			if ($event.detail.errMsg !== 'getUserInfo:ok') return;
 			this.updateUser($event.detail.userInfo);
 		};
+
+		/**
+		 * 详情跳转
+		 */
+		toDetail () {
+			uNavigateTo('/pages/preview/petDetail').then()
+		}
 	}
 </script>
 

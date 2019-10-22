@@ -1,46 +1,47 @@
 <template>
-	<view class="content">
-		<image class="logo" :src="userInfo.avatarUrl"></image>
-		<view>
-			<text class="title">{{title}}</text>
-		</view>
-		<view>
-			<button class="title" open-type="getUserInfo" @getuserinfo="getUser">{{title}}</button>
+	<view class="release-index-wrap">
+		<view class="u-flex-b-c content">
+			<view v-for="(item, index) in releaseConfig" :key="index" @click="releaseInfo(item.id)">
+				<image :src="item.logo"></image>
+				<view>{{item.name}}</view>
+			</view>
 		</view>
 	</view>
 </template>
 
 <script lang="ts">
 	import Vue from 'vue';
-	import Component from 'vue-class-component'
-	import { User } from '@/store/types'
-	import { Getter } from 'vuex-class'
+	import { Component } from 'vue-property-decorator';
+	import { uNavigateTo } from '@/utils/navigateAction'
 
 	@Component
 	export default class Index extends Vue {
-		@Getter('user', { namespace: 'user' }) userInfo: User;
-		title: string = 'hello';
+		releaseConfig: Array<object> = [
+			{ name: 'pet', id: 0, logo: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132' },
+			{ name: 'pet', id: 1, logo: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132' },
+			{ name: 'pet', id: 2, logo: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132' }
+		];
 
-		/**
-		 * 授权用户信息
-		 * @param $event
-		 */
-		getUser($event: any): void {};
+		static releaseInfo(id: number) {
+			uNavigateTo(`/pages/release/release?id=${id}`).then()
+		};
 	}
 </script>
 
-<style lang="less">
-	.content {
-		text-align: center;
-		height: 400px;
-	}
-	.logo {
-		height: 200px;
-		width: 200px;
-		margin-top: 200px;
-	}
-	.title {
-		font-size: 36px;
-		color: @uni-color-warning;
+
+<style lang="less" scoped>
+	.release-index-wrap {
+		width: 100vw;
+		height: 100vh;
+		position: relative;
+		.content {
+			width: 80vw;
+			.base-position(50%, 50%);
+			image {
+				display: block;
+				.base-square(50px);
+				margin-bottom: 20px;
+			}
+		}
 	}
 </style>

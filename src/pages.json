@@ -10,6 +10,9 @@
 			"path": "pages/release/index"
 		},
 		{
+			"path": "pages/release/release"
+		},
+		{
 			"path": "pages/mine/index"
 		}
 	],
