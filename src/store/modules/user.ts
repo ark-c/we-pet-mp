@@ -53,7 +53,8 @@ const mutations: MutationTree<User> = {
 		uni.login({
 			success: async (res: any) => {
 				if (!res.code) return;
-				const result = await apiLogin(res.code);
+				Object.assign(state, {code: res.code})
+				// const result = await apiLogin(res.code);
 			}
 		});
 	}

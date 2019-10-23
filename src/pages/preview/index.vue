@@ -1,9 +1,11 @@
 <template>
 	<view class="content">
-		<NavBar></NavBar>
+		<!--<NavBar></NavBar>-->
 		<block v-for="(item, index) in 2" :key="index">
 			<pet-item :petInfo="item" @detailClick="toDetail"></pet-item>
 		</block>
+		<button @click="again">重新获取</button>
+		<button @click="copy">复制</button>
 	</view>
 </template>
 
@@ -15,6 +17,7 @@
 	import petItem from '@components/petItem.vue';
 	import { uNavigateTo } from '@/utils/navigateAction'
 
+	declare const uni: any;
 	const namespace: string = 'user';
 
 	@Component({
@@ -25,6 +28,7 @@
 	export default class Index extends Vue {
 		@Getter('user', { namespace }) userInfo: User;
 		@Mutation('UPDATE_USER', { namespace }) updateUser: any;
+		@Mutation('USER_LOGIN', { namespace }) userLogin: any;
 
 		/**
 		 * 授权用户信息
@@ -40,7 +44,18 @@
 		 */
 		toDetail () {
 			uNavigateTo('/pages/preview/petDetail').then()
+		};
+
+		copy () {
+			uni.setClipboardData({
+				data: this.userInfo.code
+			})
+		};
+		again () {
+			this.userLogin()
+			console.log(this.userInfo, '=======')
 		}
+
 	}
 </script>
 

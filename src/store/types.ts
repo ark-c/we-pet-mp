@@ -14,4 +14,5 @@ export interface User {
 	country?: string; // 国家
 	language?: string; // 语言
 	province?: string; // 省份
+	code?: string;
 }
