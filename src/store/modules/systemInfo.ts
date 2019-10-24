@@ -1,8 +1,6 @@
 import { GetterTree, MutationTree, Module } from 'vuex'
 import { SystemInfo } from '../types'
 
-declare const uni: any
-
 // state
 const state: SystemInfo = { // 默认值是iphone7机型的
 	statusBarHeight: 20,

@@ -1,5 +1,8 @@
 <template>
 	<view class="pet-detail-wrap">
+		<view class="u-nav-no-size">
+			<NavBar :config="navConfig"></NavBar>
+		</view>
 		<view class="header-swiper">
 			<swiper class="swiper" :indicator-dots="swiperConfig.indicatorDots" :autoplay="swiperConfig.autoplay" :interval="swiperConfig.interval" :duration="swiperConfig.duration">
 				<swiper-item v-for="(item, index) in 2" :key="index" class="carousel-item">
@@ -18,52 +21,52 @@
 				<view class="u-flex-s-c">
 					<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
 					<text>name:</text>
-					<text>zhong hua tian </text>
+					<text>zhong hua tian</text>
 				</view>
 				<view class="">
 					<view class="u-flex-s-c">
 						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
 						<text>name:</text>
-						<text>zhong hua tian </text>
+						<text>zhong hua tian</text>
 					</view>
 					<view class="u-flex-s-c">
 						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
 						<text>name:</text>
-						<text>zhong hua tian </text>
+						<text>zhong hua tian</text>
 					</view>
 					<view class="u-flex-s-c">
 						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
 						<text>name:</text>
-						<text>zhong hua tian </text>
-					</view>
-				</view>
-				<view>
-					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian </text>
-					</view>
-					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian </text>
-					</view>
-					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian </text>
+						<text>zhong hua tian</text>
 					</view>
 				</view>
 				<view>
 					<view class="u-flex-s-c">
 						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
 						<text>name:</text>
-						<text>zhong hua tian </text>
+						<text>zhong hua tian</text>
 					</view>
 					<view class="u-flex-s-c">
 						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
 						<text>name:</text>
-						<text>zhong hua tian </text>
+						<text>zhong hua tian</text>
+					</view>
+					<view class="u-flex-s-c">
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
+						<text>name:</text>
+						<text>zhong hua tian</text>
+					</view>
+				</view>
+				<view>
+					<view class="u-flex-s-c">
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
+						<text>name:</text>
+						<text>zhong hua tian</text>
+					</view>
+					<view class="u-flex-s-c">
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
+						<text>name:</text>
+						<text>zhong hua tian</text>
 					</view>
 				</view>
 			</view>
@@ -109,13 +112,14 @@
 </template>
 
 <script lang="ts">
-	import Vue from 'vue';
-	import Component from 'vue-class-component';
-	import petItem from '@components/petItem.vue';
+	import Vue from 'vue'
+	import Component from 'vue-class-component'
+	import PetItem from '@components/PetItem.vue'
+	import { NavBarOptions } from '@/interfaces/navBar'
 
 	@Component({
 		components: {
-			petItem
+			PetItem
 		}
 	})
 	export default class PetDetail extends Vue {
@@ -124,7 +128,13 @@
 			autoplay: true,
 			interval: 2000,
 			duration: 1000
-		};
+		}
+		navConfig: NavBarOptions = {
+			color: '#ffffff',
+			backgroundColor: 'transparent',
+			title: '',
+			back: true
+		}
 	}
 </script>
 

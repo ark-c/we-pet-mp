@@ -22,9 +22,6 @@
 	import { SystemInfo } from '@/store/types'
 
 	const namespace: string = 'system'
-
-	declare const uni: any
-
 	const defaultConfig: NavBarOptions = {
 		color: '#000',
 		backgroundColor: '#fff',

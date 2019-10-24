@@ -22,7 +22,7 @@
 <script lang="ts">
 	import Vue from 'vue';
 	import { Component } from 'vue-property-decorator';
-	import PetItem from '@components/petItem.vue';
+	import PetItem from '@components/PetItem.vue';
 
 	@Component({
 		components: { PetItem }
