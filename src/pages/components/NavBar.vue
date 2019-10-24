@@ -16,11 +16,12 @@
 
 <script lang="ts">
 	import { Vue, Component, Prop } from 'vue-property-decorator'
+	import { Getter } from 'vuex-class'
 	import { NavBarOptions, NavBarInfo } from '@/interfaces/navBar'
 	import { uNavigateBack } from '@/utils/navigateAction'
+	import { SystemInfo } from '@/store/types'
 
-	declare const uni: any
-
+	const namespace: string = 'system'
 	const defaultConfig: NavBarOptions = {
 		color: '#000',
 		backgroundColor: '#fff',
@@ -29,11 +30,12 @@
 	}
 	@Component
 	export default class NavBar extends Vue {
+		@Getter('systemInfo', { namespace }) public systemInfo: SystemInfo
+
 		navBarInfo: NavBarInfo = {}
-		@Prop({ default: defaultConfig, required: false }) config: NavBarOptions = defaultConfig
+		@Prop({ default: defaultConfig, required: false }) config: NavBarOptions
 
 		created () {
-			this.getSystemInfo()
 			this.setStyle()
 		}
 
@@ -44,45 +46,9 @@
 			uNavigateBack(1)
 		}
 
-		getSystemInfo () {
-			if (uni.globalSystemInfo && !uni.globalSystemInfo.ios) {
-				return uni.globalSystemInfo
-			} else {
-				let systemInfo: any = uni.getSystemInfoSync()
-				let ios = !!(systemInfo.system.toLowerCase().search('ios') + 1)
-				let rect: any = uni.getMenuButtonBoundingClientRect ? uni.getMenuButtonBoundingClientRect() : null
-				uni.getMenuButtonBoundingClientRect()
-
-				let navBarHeight: any = ''
-				if (!systemInfo.statusBarHeight) {
-					systemInfo.statusBarHeight = systemInfo.screenHeight - systemInfo.windowHeight - 20
-					navBarHeight = (function () {
-						let gap = rect.top - systemInfo.statusBarHeight
-						return 2 * gap + rect.height
-					})()
-
-					systemInfo.statusBarHeight = 0
-					systemInfo.navBarExtendHeight = 0 //下方扩展4像素高度 防止下方边距太小
-				} else {
-					navBarHeight = (function () {
-						let gap = rect.top - systemInfo.statusBarHeight
-						return systemInfo.statusBarHeight + 2 * gap + rect.height
-					})()
-					if (ios) {
-						systemInfo.navBarExtendHeight = 4 //下方扩展4像素高度 防止下方边距太小
-					} else {
-						systemInfo.navBarExtendHeight = 0
-					}
-				}
-				systemInfo.navBarHeight = navBarHeight //导航栏高度不包括statusBarHeight
-				systemInfo.capsulePosition = rect //右上角胶囊按钮信息bottom: 58 height: 32 left: 317 right: 404 top: 26 width: 87 目前发现在大多机型都是固定值 为防止不一样所以会使用动态值来计算nav元素大小
-				systemInfo.ios = ios //是否ios
-				uni.globalSystemInfo = systemInfo //将信息保存到全局变量中,后边再用就不用重新异步获取了
-				console.log('systemInfo1111', systemInfo)
-				return systemInfo
-			}
-		}
-
+		/**
+		 * 设置导航栏参数
+		 */
 		setStyle () {
 			const {
 							statusBarHeight,
@@ -91,8 +57,7 @@
 							navBarExtendHeight,
 							ios,
 							windowWidth
-						} = uni.globalSystemInfo
-			console.log('this.config', this.config)
+						} = this.systemInfo
 			let leftWidth = windowWidth - capsulePosition.left //胶囊按钮左侧到屏幕右侧的边距
 			let navigationBarStyle = {
 				background: this.config.backgroundColor,
@@ -109,7 +74,6 @@
 				navBarExtendHeight,
 				ios
 			}
-			console.log('this.styleData', this.navBarInfo)
 		}
 	}
 </script>
@@ -149,11 +113,10 @@
 			height: 64px;
 			display: flex;
 			align-items: center;
-			margin-left: 20px;
 			.icon-back {
 				font-size: 30px;
 				font-weight: bold;
-				margin-left: 15px;
+				margin-left: 35px;
 			}
 		}
 		.nav-bar-center {

@@ -4,7 +4,7 @@
 			<view class="u-flex-s-c">
 				<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="avatar-small"></image>
 				<view class="u-mg-l-20 u-fz-middle">
-					<view>Merlin</view>
+					<view class="u-fz-w">Merlin</view>
 					<view>today</view>
 				</view>
 			</view>
@@ -12,7 +12,7 @@
 		</view>
 		<view class="item-content" @click="emitDetail">
 			<view class="name u-mg-t-40 u-mg-b-20 u-fz-big">
-				<text>name</text>
+				<text class="u-fz-w">name</text>
 				<text>(3-5month)</text>
 			</view>
 			<view class="desc u-text-clamp-3">
@@ -31,20 +31,20 @@
 		</view>
 		<view class="item-footer u-flex-b-c">
 			<view class="u-flex-s-c">
-				<image class="img-item" src="../../static/images/location.png"/>
+				<text class="iconfont icon-location"></text>
 				<text>BeiJing</text>
 			</view>
-			<view class="u-flex-b-c">
+			<view class="u-flex-b-c edit-wrap">
 				<view class="u-flex-s-c">
-					<image class="img-item" src="../../static/images/location.png"/>
+					<text class="iconfont icon-eye"></text>
 					<text>23</text>
 				</view>
 				<view class="u-flex-s-c">
-					<image class="img-item" src="../../static/images/location.png"/>
+					<text class="iconfont icon-collect"></text>
 					<text>32</text>
 				</view>
 				<view class="u-flex-s-c">
-					<image class="img-item" src="../../static/images/location.png"/>
+					<text class="iconfont icon-share"></text>
 					<text>32</text>
 				</view>
 			</view>
@@ -82,7 +82,6 @@
 		border-radius: 30px;
 		padding: 32px;
 		box-sizing: border-box;
-
 		.item-content {
 			.pet-image {
 				position: relative;
@@ -98,9 +97,18 @@
 				}
 			}
 		}
-		.item-footer {
-			.img-item {
-				.base-square(60px);
+		.icon-location {
+			color: #EF8582;
+			margin-right: 10px;
+			font-size: 34px;
+		}
+		.edit-wrap {
+			color: #E7E7E7;
+			font-size: 26px;
+			.iconfont {
+				font-size: 30px;
+				color: #E1E1E1;
+				margin: 0 6px 0 34px;
 			}
 		}
 	}

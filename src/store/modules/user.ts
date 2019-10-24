@@ -2,7 +2,6 @@ import { GetterTree, Module, MutationTree } from 'vuex';
 import { User } from '../types';
 import { apiLogin } from '@/service/api';
 
-declare const uni: any;
 
 const cacheUserInfo: User = uni.getStorageSync('userInfo') || {};
 const userInfo: User = {

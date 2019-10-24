@@ -15,3 +15,13 @@ export interface User {
 	language?: string; // 语言
 	province?: string; // 省份
 }
+
+export interface SystemInfo {
+	statusBarHeight: number; // 状态栏的高度,头条小程序不支持
+	navBarHeight: number; // 导航栏高度
+	capsulePosition: any; // 右上角胶囊按钮信息
+	navBarExtendHeight: number; // 下方扩展4像素高度 防止下方边距太小
+	ios: boolean; // 是否ios
+	windowWidth: number; // 可使用窗口宽度
+	[propName: string]: any;
+}
