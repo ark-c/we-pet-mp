@@ -33,8 +33,9 @@ interface HttpOptions {
 const formatUrl = (url: string) => {
 	let baseUrl: string = '';
 	url = url.replace(/\/\//g, '/');
-	if (process.env ) { // TODO
-		baseUrl = '';
+	console.log(process.env)
+	if (process.env.BASE_URL ) { // TODO
+		baseUrl = 'http://api.catcatdogdog.net:8081';
 		if (baseUrl.endsWith('/')) { // 判断是否作为结尾
 			baseUrl = baseUrl.substring(0, baseUrl.length - 1);
 		}

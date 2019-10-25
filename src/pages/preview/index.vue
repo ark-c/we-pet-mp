@@ -3,7 +3,7 @@
 		<view>
 			<NavBar :config="navConfig"></NavBar>
 		</view>
-		<view class="picker-wrap u-flex-c-c">
+		<view class="top u-flex-c-c">
 			<pet-picker @changePicker="changePicker($event,'areaPickerConfig')" :option="areaPickerConfig" class="picker"></pet-picker>
 			<pet-picker @changePicker="changePicker($event,'breedPickerConfig')" :option="breedPickerConfig" class="picker"></pet-picker>
 		</view>
@@ -42,19 +42,11 @@
 			back: false
 		}
 		areaPickerConfig: pickerOptions = {
-			pickerList: [
-				{
-					id: 0,
-					name: '全国'
-				},
-				{
-					id: 1,
-					name: '省市区'
-				}
-			],
-			rangeKey: 'name'
+			mode: 'region',
+			region: ['全国', '', '']
 		}
 		breedPickerConfig: pickerOptions = {
+			mode: 'selector',
 			pickerList: [
 				{
 					id: 0,
@@ -102,12 +94,12 @@
 			console.log('当前picker索引', val)
 			console.log('当前是哪个picker', picker)
 
-			interface IParams { // 解决this[picker]报错的问题
-				[key: string]: any
-			}
-
-			let id = (<IParams>this)[picker].pickerList[val].id
-			console.log('id', id)
+			// interface IParams { // 解决this[picker]报错的问题
+			// 	[key: string]: any
+			// }
+			//
+			// let id = (<IParams>this)[picker].pickerList[val].id
+			// console.log('id', id)
 		}
 	}
 </script>
@@ -117,16 +109,16 @@
 		background-color: #f9f9f9;
 		width: 100vw;
 		min-height: 100vh;
-	}
-	.picker-wrap {
-		background: #fff;
-		padding: 30px 0;
-		margin-bottom: 20px;
-		font-size: 26px;
-		color: #434343;
-		.picker {
-			flex: 1;
-			text-align: center;
+		.top {
+			background: #fff;
+			padding: 30px 0;
+			margin-bottom: 20px;
+			font-size: 26px;
+			color: #434343;
+			.picker {
+				flex: 1;
+				text-align: center;
+			}
 		}
 	}
 </style>
