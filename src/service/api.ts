@@ -1,7 +1,7 @@
 import * as http from './httpRequest';
 
 const api: any = {
-	login: 'common/wx/code2Session/v1' // 获取token
+	login: 'user/get-login/v1' // 获取token
 };
 
 /**

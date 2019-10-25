@@ -1,29 +1,33 @@
 <template>
 	<view class="release-index-wrap">
-		<view class="u-flex-b-c content">
-			<view v-for="(item, index) in releaseConfig" :key="index" @click="releaseInfo(item.id)">
-				<image :src="item.logo"></image>
-				<view>{{item.name}}</view>
+		<view class="content">
+			<view class="u-fz-large u-fz-w">发布宠物领养信息</view>
+			<view class="u-fz-small excision">请选择你要发布的宠物</view>
+			<view class="u-flex-b-c">
+				<view v-for="(item, index) in releaseConfig" :key="index" @click="releaseInfo(item.id)">
+					<image :src="item.logo"></image>
+					<view class="u-fz-big u-fz-w">{{item.name}}</view>
+					<view class="u-fz-small">{{item.cname}}</view>
+				</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script lang="ts">
-	import Vue from 'vue';
-	import { Component } from 'vue-property-decorator';
-	import { uNavigateTo } from '@/utils/navigateAction'
+	import { Component, Vue } from 'vue-property-decorator';
+	import { uNavigateTo } from '@/utils/navigateAction';
 
 	@Component
 	export default class Index extends Vue {
 		releaseConfig: Array<object> = [
-			{ name: 'pet', id: 0, logo: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132' },
-			{ name: 'pet', id: 1, logo: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132' },
-			{ name: 'pet', id: 2, logo: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132' }
+			{ name: 'CAT', cname: '猫咪', id: 0, logo: '../../static/images/release-cat.png' },
+			{ name: 'DOG', cname: '狗狗', id: 1, logo: '../../static/images/release-dog.png' },
+			{ name: 'PET', cname: '其他宠物', id: 2, logo: '../../static/images/release-other.png' }
 		];
 
-		static releaseInfo(id: number) {
-			uNavigateTo(`/pages/release/release?id=${id}`).then()
+		releaseInfo(id: number) {
+			uNavigateTo(`/pages/release/release?id=${ id }`).then();
 		};
 	}
 </script>
@@ -36,11 +40,15 @@
 		position: relative;
 		.content {
 			width: 80vw;
-			.base-position(50%, 50%);
+			.base-position(60%, 50%);
+			text-align: center;
 			image {
 				display: block;
-				.base-square(50px);
+				.base-square(183px);
 				margin-bottom: 20px;
+			}
+			.excision {
+				margin: 20px auto 100px;
 			}
 		}
 	}

@@ -7,8 +7,7 @@ export interface User {
 	avatarUrl?: string; // 用户头像
 	phone?: string; // 手机号
 	gender?: string; // 性别
-	session: string; // 临时凭证
-	token?: string; // 登录token
+	xAuthToken?: string; // 登录token
 	openId?: string; // openId
 	city?: string; // 城市
 	country?: string; // 国家
