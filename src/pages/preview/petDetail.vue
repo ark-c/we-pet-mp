@@ -4,69 +4,70 @@
 			<NavBar :config="navConfig"></NavBar>
 		</view>
 		<view class="header-swiper">
-			<swiper class="swiper" :indicator-dots="swiperConfig.indicatorDots" :autoplay="swiperConfig.autoplay" :interval="swiperConfig.interval" :duration="swiperConfig.duration">
-				<swiper-item v-for="(item, index) in 2" :key="index" class="carousel-item">
+			<swiper class="swiper" :indicator-dots="swiperConfig.indicatorDots" :indicator-color="swiperConfig.indicatorColor" :indicator-active-color="swiperConfig.indicatorActiveColor" :autoplay="swiperConfig.autoplay" :interval="swiperConfig.interval" :duration="swiperConfig.duration">
+				<swiper-item v-for="(item, index) in 2" :key="index">
 					<image class="carousel-img" src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
 				</swiper-item>
 			</swiper>
 		</view>
 		<!--pet info-->
 		<view class="info">
-			<view class="u-flex-b-c">
-				<text>no name de m m</text>
-				<text>has been lock</text>
+			<view class="basic-info u-flex-b-c">
+				<text>还没有名字的猫咪</text>
+				<text>待领养</text>
 			</view>
-
 			<view class="detail-inline">
-				<view class="u-flex-s-c">
-					<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-					<text>name:</text>
-					<text>zhong hua tian</text>
-				</view>
-				<view class="">
+				<view class="detail-row">
 					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian</text>
-					</view>
-					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian</text>
-					</view>
-					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian</text>
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="icon"></image>
+						<text>品种：</text>
+						<text>中华田</text>
 					</view>
 				</view>
-				<view>
+				<view class="detail-row">
 					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian</text>
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="icon"></image>
+						<text>品种：</text>
+						<text>中华</text>
 					</view>
 					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian</text>
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="icon"></image>
+						<text>品种：</text>
+						<text>中园猫</text>
 					</view>
 					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian</text>
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="icon"></image>
+						<text>品种：</text>
+						<text>中园猫</text>
 					</view>
 				</view>
-				<view>
+				<view class="detail-row">
 					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian</text>
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="icon"></image>
+						<text>品种：</text>
+						<text>中华田</text>
 					</view>
 					<view class="u-flex-s-c">
-						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
-						<text>name:</text>
-						<text>zhong hua tian</text>
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="icon"></image>
+						<text>品种：</text>
+						<text>中华田</text>
+					</view>
+					<view class="u-flex-s-c">
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="icon"></image>
+						<text>品种：</text>
+						<text>中华田</text>
+					</view>
+				</view>
+				<view class="detail-row">
+					<view class="u-flex-s-c">
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="icon"></image>
+						<text>品种：</text>
+						<text>中华田</text>
+					</view>
+					<view class="u-flex-s-c">
+						<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="icon"></image>
+						<text>品种：</text>
+						<text>中华田</text>
 					</view>
 				</view>
 			</view>
@@ -125,7 +126,9 @@
 	export default class PetDetail extends Vue {
 		swiperConfig: any = {
 			indicatorDots: true,
-			autoplay: true,
+			indicatorColor: 'rgba(255,255,255,0.6)',
+			indicatorActiveColor: '#fff',
+			autoplay: false,
 			interval: 2000,
 			duration: 1000
 		}
@@ -142,25 +145,43 @@
 	.pet-detail-wrap {
 		padding-bottom: 120px;
 		background-color: #f9f9f9;
+		.header-swiper {
+			.swiper {
+				height: 672px;
+			}
+			.carousel-img {
+				width: 100vw;
+				height: 100%;
+			}
+		}
 		.info {
 			padding: 0 32px;
+			.basic-info {
+				padding: 35px 0 28px;
+				font-size: 32px;
+			}
 			.opr {
 				> button {
 					.flex-box-align-justify(center, start);
 				}
 			}
-
 			.detail-inline {
 				box-sizing: border-box;
 				padding: 20px;
 				border-radius: 10px;
 				background-color: #ffffff;
-				> view {
+				font-size: 24px;
+				.detail-row {
+					padding: 17px 0 14px;
 					display: flex;
 					border-bottom: 2px solid #f6f6f6;
+					> view {
+						width: 33.3%;
+					}
 				}
-				image {
-					.base-square(40px)
+				.icon {
+					.base-square(30px);
+					margin-right: 10px;
 				}
 			}
 		}

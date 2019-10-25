@@ -2,50 +2,46 @@
 	<view class="component-pet-item u-fz-middle">
 		<view class="item-header u-flex-b-c">
 			<view class="u-flex-s-c">
-				<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132" class="avatar-small"></image>
+				<image :src="petInfo.avatar" class="avatar-small"></image>
 				<view class="u-mg-l-20 u-fz-middle">
-					<view class="u-fz-w">Merlin</view>
-					<view>today</view>
+					<view class="u-fz-w">{{petInfo.createUser}}</view>
+					<view>{{petInfo.createTime}}</view>
 				</view>
 			</view>
-			<text class="u-fz-large">today</text>
+			<text class="u-fz-middle u-fz-w">待领养</text>
 		</view>
 		<view class="item-content" @click="emitDetail">
 			<view class="name u-mg-t-40 u-mg-b-20 u-fz-big">
-				<text class="u-fz-w">name</text>
-				<text>(3-5month)</text>
+				<text class="u-fz-w">{{petInfo.petNikeName}}</text>
+				<text>({{petInfo.petAge}}，{{petInfo.petAssortment}})</text>
 			</view>
 			<view class="desc u-text-clamp-3">
-				a straight line passing from side to side through the center of a body or figure, especially a circle or sphere.
-				a straight line passing from side to side through the center of a body or figure, especially a circle or sphere.
-				a straight line passing from side to side through the center of a body or figure, especially a circle or sphere.
-				a straight line passing from side to side through the center of a body or figure, especially a circle or sphere.
+				{{petInfo.petIntroduction}}
 			</view>
-
 			<view class="pet-image u-flex-b-c u-mg-t-20 u-mg-b-20">
-				<block v-for="item in 2" :key="index">
-					<image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132"></image>
+				<block v-for="(item,index) in petInfo.petImages" :key="index" v-if="index < 2">
+					<image :src="item"></image>
 				</block>
-				<text class="pet-image-desc">共2张照片</text>
+				<text class="pet-image-desc">共{{petInfo.petImages && petInfo.petImages.length}}张照片</text>
 			</view>
 		</view>
 		<view class="item-footer u-flex-b-c">
 			<view class="u-flex-s-c">
 				<text class="iconfont icon-location"></text>
-				<text>BeiJing</text>
+				<view class="area u-text-ellipsis">{{petInfo.petProvince}}{{petInfo.petCity ? '/' + petInfo.petCity : ''}}{{petInfo.petDistrict ? '/' + petInfo.petDistrict : ''}}</view>
 			</view>
-			<view class="u-flex-b-c edit-wrap">
+			<view class="u-flex-b-c sum-wrap">
 				<view class="u-flex-s-c">
 					<text class="iconfont icon-eye"></text>
-					<text>23</text>
+					<text>{{petInfo.readSum}}</text>
 				</view>
 				<view class="u-flex-s-c">
 					<text class="iconfont icon-collect"></text>
-					<text>32</text>
+					<text>{{petInfo.starSum}}</text>
 				</view>
 				<view class="u-flex-s-c">
 					<text class="iconfont icon-share"></text>
-					<text>32</text>
+					<text>{{petInfo.shareSum}}</text>
 				</view>
 			</view>
 		</view>
@@ -53,22 +49,39 @@
 </template>
 
 <script lang="ts">
-	import Vue from 'vue';
-	import Component from 'vue-class-component';
-	import { Prop } from 'vue-property-decorator';
+	import Vue from 'vue'
+	import Component from 'vue-class-component'
+	import { Prop } from 'vue-property-decorator'
 
 	const petInfo = {
-		name: '',
-		avatar: ''
-	};
+		avatar: 'https://upload-images.jianshu.io/upload_images/4741933-158d7fbd28d08341.jpeg?imageMogr2/auto-orient/strip|imageView2/1/w/180/h/128/format/webp',
+		createTime: 'today',
+		createUser: 'Merlin',
+		petAge: 0,
+		petAssortment: '猫',
+		petCity: '北京',
+		petDistrict: '海淀',
+		petId: 0,
+		petImages: ['https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
+			'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132', 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132'],
+		petIntroduction: '宠物介绍',
+		petNikeName: '宠物昵称',
+		petProvince: '北京',
+		petSex: 6,
+		readSum: 10,
+		shareSum: 10,
+		starSum: 10
+	}
 	@Component
 	export default class PetItem extends Vue {
-		// @Prop({ required: false, default: petInfo }) petInfo: any;
+		petInfo = petInfo //TODO
+
+		// @Prop({ required: false, default: petInfo }) petInfo: any
 
 		/**
 		 * 单项点击
 		 */
-		emitDetail() {
+		emitDetail () {
 			this.$emit('detailClick')
 		}
 	}
@@ -77,7 +90,7 @@
 <style lang="less" rel="stylesheet/less" scoped>
 	.component-pet-item {
 		width: 720px;
-		margin: 0 auto;
+		margin: 0 auto 13px;
 		background-color: #ffffff;
 		border-radius: 30px;
 		padding: 32px;
@@ -86,7 +99,7 @@
 			.pet-image {
 				position: relative;
 				> image {
-					.base-square(300px);
+					.base-square(320px);
 				}
 				.pet-image-desc {
 					position: absolute;
@@ -102,9 +115,12 @@
 			margin-right: 10px;
 			font-size: 34px;
 		}
-		.edit-wrap {
+		.area {
+			max-width: 300px;
+		}
+		.sum-wrap {
 			color: #E7E7E7;
-			font-size: 26px;
+			font-size: 24px;
 			.iconfont {
 				font-size: 30px;
 				color: #E1E1E1;

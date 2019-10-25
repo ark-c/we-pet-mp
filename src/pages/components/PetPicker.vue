@@ -1,9 +1,9 @@
 <template>
 	<view class="picker-wrap">
 		<block v-if="option.mode === 'selector'">
-			<picker @change="bindPickerChange" :value="curIndex" :range="option.pickerList" :range-key="option.rangeKey">
-				<view class="uni-input">
-					{{option.staticText || ''}}{{option.pickerList[curIndex][option.rangeKey]}}
+			<picker @change="bindPickerChange" :value="curIndex" :range="option.pickerList">
+				<view class="uni-input u-flex-c-c">
+					{{option.staticText || ''}}{{option.pickerList[curIndex]}}
 					<text class="iconfont icon-arrow"></text>
 				</view>
 			</picker>
@@ -22,19 +22,18 @@
 
 <script lang="ts">
 	import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
-	import { pickerOptions } from '@/interfaces/petPicker'
+	import { PickerOptions } from '@/interfaces/petPicker'
 
-	const defaultPickerOption: pickerOptions = {
+	const defaultPickerOption: PickerOptions = {
 		mode: 'selector',
 		pickerList: [],
-		rangeKey: '',
 		staticText: '',
 		region: []
 	}
 
 	@Component
 	export default class PetPicker extends Vue {
-		@Prop({ default: defaultPickerOption }) option: pickerOptions
+		@Prop({ default: defaultPickerOption }) option: PickerOptions
 		curIndex: number = 0
 		areaRegion: any = this.option.region
 
@@ -66,8 +65,6 @@
 			margin: 2px 0 0 4px;
 		}
 		.uni-input {
-			display: flex;
-			justify-content: center;
 			.u-text-ellipsis {
 				max-width: 300px;
 			}
