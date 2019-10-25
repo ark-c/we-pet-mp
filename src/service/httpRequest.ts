@@ -33,8 +33,7 @@ interface HttpOptions {
 const formatUrl = (url: string) => {
 	let baseUrl: string = '';
 	url = url.replace(/\/\//g, '/');
-	console.log(process.env)
-	if (process.env.BASE_URL ) { // TODO
+	if (process.env) { // TODO
 		baseUrl = 'http://api.catcatdogdog.net:8081';
 		if (baseUrl.endsWith('/')) { // 判断是否作为结尾
 			baseUrl = baseUrl.substring(0, baseUrl.length - 1);
@@ -54,10 +53,7 @@ const formatUrl = (url: string) => {
 const getHeaders = (options: HttpOptions) => {
 	const defaultHeaders: any = {
 		'content-type': 'application/json',
-		'X-Auth-Token': uni.getStorageSync('token') || uni.getStorageSync('session'),
-		'x-client-ver': process.env.VERSION,
-		'ver': process.env.VERSION,
-		'terminalCode': 7
+		'X-Auth-Token': uni.getStorageSync('xAuthToken') || ''
 	};
 	if (options && options.header && typeof options.header === 'object') {
 		const header = options.header;
@@ -112,7 +108,6 @@ const request = (method: string, url: string, params: any, options: HttpOptions)
 		intercept: true     // 是否拦截
 		// responseType: 'json'	// 响应格式: 可选项 'arraybuffer', 'blob', 'document', 'json', 'text', 'stream' 支付宝小程序不支持
 	}, options, { method, url });
-	console.log(options, '====')
 	return new Promise((resolve, reject) => {
 		const sendOptions: HttpOptions = {
 			method: options.method,

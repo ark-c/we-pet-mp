@@ -2,15 +2,13 @@ import { GetterTree, Module, MutationTree } from 'vuex';
 import { User } from '../types';
 import { apiLogin } from '@/service/api';
 
-
 const cacheUserInfo: User = uni.getStorageSync('userInfo') || {};
 const userInfo: User = {
 	nickName: 'we-pet', // 昵称
 	phone: '', // 手机号
 	avatarUrl: '../../static/logo.png', // 头像
 	gender: 'man', // 性别
-	session: uni.getStorageSync('session') || '', // 临时凭证
-	token: '', // 登录token
+	xAuthToken: uni.getStorageSync('xAuthToken') || '', // 登录token
 	openId: uni.getStorageSync('openId') || '', // openId
 	...cacheUserInfo
 };
@@ -53,6 +51,10 @@ const mutations: MutationTree<User> = {
 			success: async (res: any) => {
 				if (!res.code) return;
 				const result = await apiLogin(res.code);
+				Object.assign(state, result);
+				uni.setStorageSync('openId', result.openId)
+				uni.setStorageSync('xAuthToken', result.xAuthToken)
+				uni.setStorageSync('userInfo', state);
 			}
 		});
 	}
