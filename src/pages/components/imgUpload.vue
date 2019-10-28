@@ -2,17 +2,17 @@
 	<view class="img-upload-wrap">
 		<input @change="fileChange" type="file" accept="image/*" :multiple="multipleJudge" style="display: none" ref="ImgUpload"/>
 		<view class="item" v-if="!multipleJudge && imgSrc">
-			<image :src="imgSrc" class="upload-img"></image>
+			<image :src="imgSrc" class="upload-img image"></image>
 			<image class="upload-close" @click="clearImg()"></image>
 		</view>
 		<view v-if="multipleJudge && imgSrcArr.length" class="img-upload">
 			<view class="item" v-for="(item, index) in imgSrcArr" :key="index">
-				<image :src="item" class="upload-img"></image>
+				<image :src="item" class="upload-img image"></image>
 				<!--<image class="upload-close" @click="clearImg(index)" src="@/assets/images/new/upload-close.png"></image>-->
 			</view>
 		</view>
 		<view v-if="showAdd" class="item item-add" @click="uploadClick">
-			<image src="../../statics/images/add.png" alt="empty image"></image>
+			<image src="../../static/images/add.png" alt="empty image "></image>
 		</view>
 	</view>
 </template>
@@ -75,6 +75,14 @@
 	}
 </script>
 
-<style lang="less" rel="stylesheet/less" scoped>
-
+<style lang="less" scoped>
+	.img-upload-wrap {
+		display: flex;
+		flex-wrap: wrap;
+		.item {
+			width: 200px;
+			height: 200px;
+			overflow: hidden;
+		}
+	}
 </style>

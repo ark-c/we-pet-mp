@@ -48,6 +48,7 @@
 
 <style lang="less" scoped>
 	.release-wrap {
-
+		padding: 32px;
+		background-color: #f6f6f6;
 	}
 </style>
