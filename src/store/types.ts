@@ -7,12 +7,13 @@ export interface User {
 	avatarUrl?: string; // 用户头像
 	phone?: string; // 手机号
 	gender?: string; // 性别
-	xAuthToken?: string; // 登录token
+	token?: string; // 登录token
 	openId?: string; // openId
 	city?: string; // 城市
 	country?: string; // 国家
 	language?: string; // 语言
 	province?: string; // 省份
+	[propName: string]: any;
 }
 
 export interface SystemInfo {

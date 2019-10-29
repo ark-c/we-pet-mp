@@ -3,7 +3,7 @@
 		<input @change="fileChange" type="file" accept="image/*" :multiple="multipleJudge" style="display: none" ref="ImgUpload"/>
 		<view class="item" v-if="!multipleJudge && imgSrc">
 			<image :src="imgSrc" class="upload-img image"></image>
-			<image class="upload-close" @click="clearImg()"></image>
+			<image class="upload-close" @click="clearImg"></image>
 		</view>
 		<view v-if="multipleJudge && imgSrcArr.length" class="img-upload">
 			<view class="item" v-for="(item, index) in imgSrcArr" :key="index">

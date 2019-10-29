@@ -53,7 +53,8 @@ const formatUrl = (url: string) => {
 const getHeaders = (options: HttpOptions) => {
 	const defaultHeaders: any = {
 		'content-type': 'application/json',
-		'X-Auth-Token': uni.getStorageSync('xAuthToken') || ''
+		'X-Auth-Token': uni.getStorageSync('token') || '',
+		'openid': uni.getStorageSync('openId') || '',
 	};
 	if (options && options.header && typeof options.header === 'object') {
 		const header = options.header;
