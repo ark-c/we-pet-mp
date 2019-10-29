@@ -9,24 +9,23 @@
 		</view>
 		<view class="list-wrap">
 			<block v-for="(item, index) in 2" :key="index">
-				<pet-item :petInfo="item" @detailClick="toDetail"></pet-item>
+				<pet-item :petInfo="item" @toDetail="toDetail"></pet-item>
 			</block>
 		</view>
 	</view>
 </template>
 
 <script lang="ts">
-	import Vue from 'vue'
-	import { Component } from 'vue-property-decorator'
+	import { Component, Vue } from 'vue-property-decorator'
 	import { Getter, Mutation } from 'vuex-class'
 	import { User } from '@/store/types'
 	import PetItem from '@components/PetItem.vue'
+	import PetPicker from '@components/PetPicker.vue'
 	import { uNavigateTo } from '@/utils/navigateAction'
 	import { NavBarOptions } from '@/interfaces/navBar'
-	import PetPicker from '@components/PetPicker.vue'
 	import { PickerOptions } from '@/interfaces/petPicker'
 	import { apiPetList } from '@/service/api'
-	import { PetParaDto } from '@/interfaces/api'
+	import { PetItemInfo, PetParaDto } from '@/interfaces/api'
 
 	const namespace: string = 'user'
 
@@ -64,7 +63,7 @@
 		// 当前选中的宠物种类的索引
 		breedIndex: string | number = 0
 		// 宠物列表
-		petList: any[]
+		petList: PetItemInfo[]
 
 		created () {
 			this.getList()
@@ -83,7 +82,7 @@
 				petDistrict: this.area[2]
 			}
 			apiPetList(params).then((res) => {
-				this.petList = res.items
+				this.petList = (<PetItemInfo[]>res.items).filter((item) => item.effectiveStatus === 0)
 			})
 		}
 
@@ -99,7 +98,7 @@
 		/**
 		 * 详情跳转
 		 */
-		toDetail () {
+		toDetail (id: number) {
 			uNavigateTo('/pages/preview/petDetail').then()
 		}
 

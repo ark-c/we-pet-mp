@@ -2,15 +2,15 @@
 	<view class="component-pet-item u-fz-middle">
 		<view class="item-header u-flex-b-c">
 			<view class="u-flex-s-c">
-				<image :src="petInfo.avatar" class="avatar-small"></image>
+				<image :src="petInfo.createAvatarUrl" class="avatar-small"></image>
 				<view class="u-mg-l-20 u-fz-middle">
 					<view class="u-fz-w">{{petInfo.createUser}}</view>
 					<view>{{petInfo.createTime}}</view>
 				</view>
 			</view>
-			<text class="u-fz-middle u-fz-w">待领养</text>
+			<text class="u-fz-middle u-fz-w" :class="petInfo.adoptionStatus === 0 ? 'green' : 'gray-e4'">{{petInfoStatus[petInfo.adoptionStatus]}}</text>
 		</view>
-		<view class="item-content" @click="emitDetail">
+		<view class="item-content" @click="detailClick(petInfo.petId)">
 			<view class="name u-mg-t-40 u-mg-b-20 u-fz-big">
 				<text class="u-fz-w">{{petInfo.petNikeName}}</text>
 				<text>({{petInfo.petAge}}，{{petInfo.petAssortment}})</text>
@@ -49,14 +49,14 @@
 </template>
 
 <script lang="ts">
-	import Vue from 'vue'
-	import Component from 'vue-class-component'
-	import { Prop } from 'vue-property-decorator'
+	import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
+	import { petStatus } from '@/utils/const'
 
 	const petInfo = {
-		avatar: 'https://upload-images.jianshu.io/upload_images/4741933-158d7fbd28d08341.jpeg?imageMogr2/auto-orient/strip|imageView2/1/w/180/h/128/format/webp',
+		createAvatarUrl: 'https://upload-images.jianshu.io/upload_images/4741933-158d7fbd28d08341.jpeg?imageMogr2/auto-orient/strip|imageView2/1/w/180/h/128/format/webp',
 		createTime: 'today',
 		createUser: 'Merlin',
+		adoptionStatus: 0,
 		petAge: 0,
 		petAssortment: '猫',
 		petCity: '北京',
@@ -72,17 +72,25 @@
 		shareSum: 10,
 		starSum: 10
 	}
+
 	@Component
 	export default class PetItem extends Vue {
-		petInfo = petInfo //TODO
+		petInfo = petInfo // TODO
 
 		// @Prop({ required: false, default: petInfo }) petInfo: any
+
+		petInfoStatus = petStatus
+
+		@Emit()
+		toDetail (id: number) {}
 
 		/**
 		 * 单项点击
 		 */
-		emitDetail () {
-			this.$emit('detailClick')
+		detailClick (id: number) {
+			console.log(id)
+			this.toDetail(id)
+			// this.$emit('detailClick')
 		}
 	}
 </script>
