@@ -8,7 +8,7 @@ const userInfo: User = {
 	phone: '', // 手机号
 	avatarUrl: '../../static/logo.png', // 头像
 	gender: 'man', // 性别
-	xAuthToken: uni.getStorageSync('xAuthToken') || '', // 登录token
+	token: uni.getStorageSync('token') || '', // 登录token
 	openId: uni.getStorageSync('openId') || '', // openId
 	...cacheUserInfo
 };
@@ -47,13 +47,14 @@ const mutations: MutationTree<User> = {
 	 * 登录
 	 */
 	USER_LOGIN(state) {
+		if (state.xAuthToken) return;
 		uni.login({
 			success: async (res: any) => {
 				if (!res.code) return;
 				const result = await apiLogin(res.code);
 				Object.assign(state, result);
-				uni.setStorageSync('openId', result.openId)
-				uni.setStorageSync('xAuthToken', result.xAuthToken)
+				uni.setStorageSync('openId', result.openId);
+				uni.setStorageSync('token', result.xAuthToken);
 				uni.setStorageSync('userInfo', state);
 			}
 		});

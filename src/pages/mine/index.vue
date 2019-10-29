@@ -6,21 +6,21 @@
 		<view class="header">
 			<view class="">
 				<image :src="userInfo.avatarUrl"></image>
-				<view>{{userInfo.nickName || 'Merlin'}}</view>
+				<view class="u-fz-small">{{userInfo.nickName || 'Merlin'}}</view>
 			</view>
-			<view class="tab">
+			<view class="tab u-fz-middle u-mg-t-40 u-fz-w">
 				<view class="" :class="{'active': activeTab === 0}" @click="activeTab = 0">
-					我发布的<text>(1)</text>
+					我发布的<text v-if="releaseList.length">({{releaseList.length}})</text>
 				</view>
 				<view class="" :class="{'active': activeTab === 1}" @click="activeTab = 1">
-					我关注的<text>(2)</text>
+					我关注的<text v-if="flowList.length">({{flowList.length}})</text>
 				</view>
 			</view>
 		</view>
 
 		<view class="content">
 			<block v-if="true">
-				<pet-item></pet-item>
+				<!--<pet-item></pet-item>-->
 			</block>
 		</view>
 	</view>
@@ -46,7 +46,9 @@
 			title: '',
 			back: false
 		};
-		activeTab: number = 0;
+		activeTab: number = 0; // tab
+		releaseList: Array<any> = []; // 我的发布
+		flowList: Array<any> = []; // 我的关注
 
 		created() {
 			this.initData();
@@ -73,7 +75,8 @@
 			}
 			.tab {
 				display: flex;
-				height: 60px;
+				height: 100px;
+				color: #ffffff;
 				> view {
 					flex: 1;
 					text-align: center;
