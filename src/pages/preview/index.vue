@@ -3,13 +3,15 @@
 		<view>
 			<NavBar :config="navConfig"></NavBar>
 		</view>
-		<view class="picker-wrap u-flex-c-c">
-			<pet-picker @changePicker="changePicker($event,'areaPickerConfig')" :option="areaPickerConfig" class="picker"></pet-picker>
-			<pet-picker @changePicker="changePicker($event,'breedPickerConfig')" :option="breedPickerConfig" class="picker"></pet-picker>
+		<view class="top u-flex-c-c">
+			<pet-picker @changePicker="changePicker($event,'area')" :option="areaPickerConfig" class="picker"></pet-picker>
+			<pet-picker @changePicker="changePicker($event,'breedIndex')" :option="breedPickerConfig" class="picker"></pet-picker>
 		</view>
-		<block v-for="(item, index) in 2" :key="index">
-			<pet-item :petInfo="item" @detailClick="toDetail"></pet-item>
-		</block>
+		<view class="list-wrap">
+			<block v-for="(item, index) in 2" :key="index">
+				<pet-item :petInfo="item" @detailClick="toDetail"></pet-item>
+			</block>
+		</view>
 	</view>
 </template>
 
@@ -22,7 +24,9 @@
 	import { uNavigateTo } from '@/utils/navigateAction'
 	import { NavBarOptions } from '@/interfaces/navBar'
 	import PetPicker from '@components/PetPicker.vue'
-	import { pickerOptions } from '@/interfaces/petPicker'
+	import { PickerOptions } from '@/interfaces/petPicker'
+	import { apiPetList } from '@/service/api'
+	import { PetParaDto } from '@/interfaces/api'
 
 	const namespace: string = 'user'
 
@@ -35,46 +39,52 @@
 	export default class Index extends Vue {
 		@Getter('user', { namespace }) userInfo: User
 		@Mutation('UPDATE_USER', { namespace }) updateUser: any
+		// 导航栏参数
 		navConfig: NavBarOptions = {
 			color: '#ffffff',
 			backgroundColor: '#EC6863',
 			title: 'WePet领养',
 			back: false
 		}
-		areaPickerConfig: pickerOptions = {
-			pickerList: [
-				{
-					id: 0,
-					name: '全国'
-				},
-				{
-					id: 1,
-					name: '省市区'
-				}
-			],
-			rangeKey: 'name'
+		// 宠物可选种类列表
+		breedList: string[] = ['不限', '猫咪', '狗狗', '其他宠物']
+		// 可选地区参数
+		areaPickerConfig: PickerOptions = {
+			mode: 'region',
+			region: ['全国', '', '']
 		}
-		breedPickerConfig: pickerOptions = {
-			pickerList: [
-				{
-					id: 0,
-					name: '不限'
-				},
-				{
-					id: 1,
-					name: '猫咪'
-				},
-				{
-					id: 2,
-					name: '狗狗'
-				},
-				{
-					id: 3,
-					name: '其他宠物'
-				}
-			],
-			rangeKey: 'name',
+		// 可选宠物种类参数
+		breedPickerConfig: PickerOptions = {
+			mode: 'selector',
+			pickerList: this.breedList,
 			staticText: '品种/'
+		}
+		// 当前选中的地区
+		area: string[] = ['全国', '', '']
+		// 当前选中的宠物种类的索引
+		breedIndex: string | number = 0
+		// 宠物列表
+		petList: any[]
+
+		created () {
+			this.getList()
+		}
+
+		/**
+		 * 获取宠物列表
+		 */
+		getList () {
+			let params: PetParaDto = {
+				page: 1,
+				rows: 10,
+				petAssortment: this.breedList[Number(this.breedIndex)],
+				petProvince: this.area[0],
+				petCity: this.area[1],
+				petDistrict: this.area[2]
+			}
+			apiPetList(params).then((res) => {
+				this.petList = res.items
+			})
 		}
 
 		/**
@@ -99,15 +109,12 @@
 		 * @param picker
 		 */
 		changePicker (val: number, picker: string) {
-			console.log('当前picker索引', val)
-			console.log('当前是哪个picker', picker)
-
 			interface IParams { // 解决this[picker]报错的问题
 				[key: string]: any
 			}
 
-			let id = (<IParams>this)[picker].pickerList[val].id
-			console.log('id', id)
+			(<IParams>this)[picker] = val
+			this.getList()
 		}
 	}
 </script>
@@ -117,16 +124,20 @@
 		background-color: #f9f9f9;
 		width: 100vw;
 		min-height: 100vh;
-	}
-	.picker-wrap {
-		background: #fff;
-		padding: 30px 0;
-		margin-bottom: 20px;
-		font-size: 26px;
-		color: #434343;
-		.picker {
-			flex: 1;
-			text-align: center;
+		.top {
+			background: #fff;
+			padding: 28px 0;
+			margin-bottom: 20px;
+			font-size: 28px;
+			color: #434343;
+			.picker {
+				flex: 1;
+				text-align: center;
+			}
+		}
+		.list-wrap {
+			overflow: hidden;
+			padding-bottom: 22px;
 		}
 	}
 </style>
