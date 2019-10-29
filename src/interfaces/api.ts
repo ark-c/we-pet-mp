@@ -29,3 +29,8 @@ export interface PetItemInfo {
 	starSum: number; // 关注数量
 	[propName: string]: any;
 }
+
+// 宠物发布提交信息
+export interface PetReleaseInfo {
+	petSex?: number; // 宠物性别
+}

@@ -23,6 +23,9 @@ interface HttpOptions {
 	loading?: boolean; // 是否开启loading
 	cache?: boolean; // 是否开启缓存
 	data?: any; // 传送数据
+	formData?: any; // formData
+	filePath?: any; // 文件上传路径
+	[propName: string]: any; // 其他
 }
 
 /**
@@ -54,7 +57,7 @@ const getHeaders = (options: HttpOptions) => {
 	const defaultHeaders: any = {
 		'content-type': 'application/json',
 		'X-Auth-Token': uni.getStorageSync('token') || '',
-		'openid': uni.getStorageSync('openId') || '',
+		'openid': uni.getStorageSync('openId') || ''
 	};
 	if (options && options.header && typeof options.header === 'object') {
 		const header = options.header;
@@ -131,6 +134,76 @@ const request = (method: string, url: string, params: any, options: HttpOptions)
 		uni.request({
 			...sendOptions,
 			success: (res: any) => {
+				if (options.loading) {
+					httpCount = (httpCount - 1) >= 0 ? (httpCount - 1) : 0;
+					if (httpCount === 0) {
+						uni.hideLoading();
+					}
+				}
+				if (!options.intercept) {
+					return resolve(res);
+				}
+				let handleRes = handleResponse(res); // 处理结果
+				if (!handleRes) return;
+				if (handleRes === 'success') return resolve(res.data.data);
+				if (handleRes === 'reject') return reject(res.data);
+			},
+			fail: (error: Error) => {
+				if (options.loading) {
+					httpCount = (httpCount - 1) >= 0 ? (httpCount - 1) : 0;
+					if (httpCount === 0) {
+						uni.hideLoading();
+					}
+				}
+				if (!options.intercept) {
+					return reject(error);
+				}
+				uni.showToast({
+					title: '网络请求错误...'
+				});
+				return reject(error);
+			}
+		});
+	});
+};
+
+export const fileUpload = (params: any, options: HttpOptions = {}) => {
+	const url = formatUrl('/common/file-upload/v1'); // 单文件
+	options = Object.assign({
+		url: '',            // 请求地址
+		header: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},        // 头信息
+		data: {},         // 参数
+		isEncrypt: false,  	// 是否加密传输数据
+		loading: true,		// 是否开启loading状态
+		intercept: true     // 是否拦截
+		// responseType: 'json'	// 响应格式: 可选项 'arraybuffer', 'blob', 'document', 'json', 'text', 'stream' 支付宝小程序不支持
+	}, options, { url });
+	return new Promise((resolve, reject) => {
+		const sendOptions: HttpOptions = {
+			url: options.url,
+			header: getHeaders(options.header),
+			filePath: params,
+			name: 'file'
+		};
+		console.log(sendOptions, 'sendOptions');
+
+		if (options.loading) {
+			uni.showLoading({ title: '加载中', mask: true });
+			httpCount += 1;
+		}
+
+		uni.uploadFile({
+			...sendOptions,
+			success: (res: any) => {
+				if (res.statusCode !== 200) {
+					uni.showToast({
+						title: '网络请求错误...'
+					});
+					return;
+				}
+				res.data = JSON.parse(res.data)
 				if (options.loading) {
 					httpCount = (httpCount - 1) >= 0 ? (httpCount - 1) : 0;
 					if (httpCount === 0) {
