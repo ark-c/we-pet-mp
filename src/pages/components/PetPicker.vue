@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-	import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
+	import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 	import { PickerOptions } from '@/interfaces/petPicker'
 
 	const defaultPickerOption: PickerOptions = {
