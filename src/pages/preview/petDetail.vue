@@ -78,7 +78,7 @@
 </template>
 
 <script lang="ts">
-	import { Vue } from 'vue-property-decorator'
+	import { Vue, Component } from 'vue-property-decorator'
 	import { NavBarOptions } from '@/interfaces/navBar'
 	import { petStatus } from '@/utils/const'
 
@@ -113,6 +113,7 @@
 		petSource: '收养来源'
 	}
 
+	@Component({})
 	export default class PetDetail extends Vue {
 		detailInfo = detailInfo
 		petInfoStatus = petStatus
