@@ -14,14 +14,17 @@
 		<view class="info">
 			<view class="basic-info u-flex-b-c">
 				<text>{{detailInfo.petNikeName ? detailInfo.petNikeName : '还没有名字的' + detailInfo.petAssortment}}</text>
-				<text :class="detailInfo.adoptionStatus === 0 ? 'green' : 'gray-e4'">{{petInfoStatus[detailInfo.adoptionStatus]}}</text>
+				<text :class="detailInfo.adoptionStatus === 0 ? 'green' : 'gray-e4'">{{petStatus[detailInfo.adoptionStatus]}}</text>
 			</view>
 			<view class="detail">
 				<view class="detail-row" v-for="(row,index) in basicInfo" :key="index">
 					<view :class="{'item-large' : item.flex === 2}" class="u-flex-s-c item" v-for="(item,itemIdx) in row" :key="itemIdx">
 						<image :src="item.iconUrl" class="icon"></image>
 						<text>{{item.key}}：</text>
-						<text>{{item.value}}</text>
+						<text v-if="!item.obj">{{detailInfo[item.value]}}</text>
+						<text v-else-if="item.key === '性别'">{{petSex[detailInfo[item.value]]}}</text>
+						<text v-else-if="item.key === '费用'">{{petCostAdoption[detailInfo[item.value]]}}</text>
+						<text v-else>{{trueOrNot[detailInfo[item.value]]}}</text>
 					</view>
 				</view>
 			</view>
@@ -41,7 +44,7 @@
 			<view class="adoption">
 				<view class="adoption-top">如需领养，请通过以下方式联系</view>
 				<view class="adoption-contact u-flex-b-c">
-					<button>
+					<button @click="handlePhone">
 						<text class="iconfont icon-phone"></text>
 						<text>电话</text>
 					</button>
@@ -69,7 +72,7 @@
 				<view class="iconfont icon-frame"></view>
 				<view class="tab-text">生成海报</view>
 			</view>
-			<view class="tab">
+			<view class="tab" @click="handleMore">
 				<view class="iconfont icon-more"></view>
 				<view class="tab-text">更多</view>
 			</view>
@@ -80,7 +83,7 @@
 <script lang="ts">
 	import { Vue, Component } from 'vue-property-decorator'
 	import { NavBarOptions } from '@/interfaces/navBar'
-	import { petStatus } from '@/utils/const'
+	import { petStatus, petSex, trueOrNot, petCostAdoption } from '@/utils/const'
 
 	const detailInfo = {
 		adoptionStatus: 0,
@@ -97,15 +100,15 @@
 		petContactsPhone: '联系人电话',
 		petContactsWx: '联系人微信',
 		petContactsWxQccodeUrl: '微信二维码图片',
-		petCostAdoption: '领养费用情况number',
+		petCostAdoption: 2,
 		petDepositAmount: '押金金额number',
 		petDistrict: '朝阳',
 		petId: 0,
-		petImages: ['https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132','https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132'],
-		petInsectRepellent: true, // 是否驱虫：1:TRUE,0:FALSE
+		petImages: ['https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132', 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132'],
+		petInsectRepellent: 0, // 是否驱虫：1:TRUE,0:FALSE
 		petIntroduction: '宠物介绍',
-		petIsSterilization: true, // 是否绝育：1:TRUE,0:FALSE
-		petIsVaccine: true, // 是否打疫苗：1:TRUE,0:FALSE
+		petIsSterilization: 1, // 是否绝育：1:TRUE,0:FALSE
+		petIsVaccine: 1, // 是否打疫苗：1:TRUE,0:FALSE
 		petNikeName: '宠物昵称',
 		petOtherCommon: '宠物其他信息',
 		petProvince: '北京',
@@ -116,7 +119,10 @@
 	@Component({})
 	export default class PetDetail extends Vue {
 		detailInfo = detailInfo
-		petInfoStatus = petStatus
+		petStatus = petStatus
+		petSex = petSex
+		trueOrNot = trueOrNot
+		petCostAdoption = petCostAdoption
 		swiperConfig: any = {
 			indicatorDots: true,
 			indicatorColor: 'rgba(255,255,255,0.6)',
@@ -136,57 +142,104 @@
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '品种',
-					value: '中华田园猫'
+					value: 'petAssortment'
 				}
 			],
 			[
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '性别',
-					value: 'MM'
+					value: 'petSex',
+					obj: true
 				},
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '年龄',
-					value: '0-3个月'
+					value: 'petAge'
 				},
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '状态',
-					value: '流浪'
+					value: 'petSource'
 				}
 			],
 			[
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '绝育',
-					value: '否'
+					value: 'petIsSterilization',
+					obj: true
 				},
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '驱虫',
-					value: '是'
+					value: 'petInsectRepellent',
+					obj: true
 				},
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '疫苗',
-					value: '未知'
+					value: 'petIsVaccine',
+					obj: true
 				}
 			],
 			[
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '费用',
-					value: '免费领养'
+					value: 'petCostAdoption',
+					obj: true
 				},
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '位置',
-					value: '北京市',
+					value: 'petProvince',
 					flex: 2
 				}
 			]
 		]
+
+		/**
+		 * 预览图片
+		 * @param url
+		 */
+		previewImage (url: string) {
+			uni.previewImage({
+				current: url,
+				indicator: 'number',
+				urls: this.detailInfo.petImages
+			})
+		}
+
+		/**
+		 * 点击更多
+		 */
+		handleMore () {
+			uni.showActionSheet({
+				itemList: ['删除内容', '编辑内容', '设置为『已被领养』'],
+				success: (res: any) => {
+					console.log('选中了第' + (res.tapIndex + 1) + '个按钮')
+				},
+				fail: (res) => {
+					console.log(res.errMsg)
+				}
+			})
+		}
+
+		/**
+		 * 点击电话
+		 */
+		handlePhone () {
+			uni.showActionSheet({
+				itemList: [this.detailInfo.petContactsPhone, '呼叫', '复制号码'],
+				success: (res: any) => {
+					console.log('选中了第' + (res.tapIndex + 1) + '个按钮')
+				},
+				fail: (res) => {
+					console.log(res.errMsg)
+				}
+			})
+		}
 	}
 </script>
 
