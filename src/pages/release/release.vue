@@ -8,20 +8,20 @@
 			<view class="header info">
 				<view class="title">说说宠物情况以及领养要求</view>
 				<textarea name="" id="" placeholder="输入宠物信息" class="pet-info" placeholder-class="placeholder-class	"></textarea>
-				<!--<img-upload :limit="6" :multipleJudge="true"></img-upload>-->
+				<img-upload :limit="6" :multipleJudge="true" @imgUpload="imgUpload($event,'petImages')"></img-upload>
 			</view>
 			<view class="contact-info info">
 				<view class="title">联系信息</view>
 				<view class="line">
 					<label for="phone">手机号</label>
-					<input id="phone" placeholder-class="placeholder" maxlength="11" placeholder="输入手机号" type="number">
+					<input id="phone" v-model="releasePetInfo.petContactsPhone" placeholder-class="placeholder" maxlength="11" placeholder="输入手机号" type="number">
 				</view>
 				<view class="line">
 					<label for="weChat">微信号</label>
-					<input id="weChat" placeholder-class="placeholder" maxlength="11" placeholder="输入微信号" type="text">
+					<input id="weChat" v-model="releasePetInfo.petContactsWx" placeholder-class="placeholder" maxlength="11" placeholder="输入微信号" type="text">
 				</view>
 				<view class="line no-border">
-					<label for="weChatImg">微信号</label>
+					<label for="weChatImg">微信号二维码</label>
 					<input id="weChatImg" type="text">
 				</view>
 			</view>
@@ -29,38 +29,62 @@
 				<view class="title">更多信息</view>
 				<view class="line">
 					<label>宠物昵称</label>
-					<input placeholder-class="placeholder" maxlength="11" placeholder="输入宠物昵称" type="text">
+					<input v-model="releasePetInfo.petName" placeholder-class="placeholder" maxlength="11" placeholder="输入宠物昵称" type="text">
 				</view>
 				<view class="line">
 					<label>所在城市</label>
+					<pet-picker @changePicker="changePicker($event,'area')" :option="areaPickerConfig" class="picker"></pet-picker>
 				</view>
 				<view class="line">
 					<label>品种</label>
+					<!--<pet-picker @changePicker="changePicker($event,'area')" :option="areaPickerConfig" class="picker"></pet-picker>-->
 				</view>
 				<view class="line">
 					<label>年龄</label>
+					<input v-model="releasePetInfo.petAge" placeholder-class="placeholder" maxlength="11" placeholder="输入宠物年龄" type="text">
 				</view>
 				<view class="line">
 					<label>收养类型</label>
+					<!--<pet-picker @changePicker="changePicker($event,'area')" :option="areaPickerConfig" class="picker"></pet-picker>-->
 				</view>
 				<view class="line">
 					<label>性别</label>
-					<radio-group @change="">
-						<radio value="MM">MM</radio>
-						<radio value="GG">GG</radio>
+					<radio-group @change="radioChange($event, 'petSex')">
+						<radio :value="0" checked>MM</radio>
+						<radio :value="1">GG</radio>
 					</radio-group>
 				</view>
 				<view class="line">
 					<label>绝育</label>
+					<radio-group @change="radioChange($event, 'petIsSterilization')">
+						<radio :value="1" checked>是</radio>
+						<radio :value="0">否</radio>
+						<radio :value="2">未知</radio>
+					</radio-group>
 				</view>
 				<view class="line">
 					<label>驱虫</label>
+					<radio-group @change="radioChange($event, 'petInsectRepellent')">
+						<radio :value="1" checked>是</radio>
+						<radio :value="0">否</radio>
+						<radio :value="2">未知</radio>
+					</radio-group>
 				</view>
 				<view class="line">
 					<label>疫苗</label>
+					<radio-group @change="radioChange($event, 'petIsVaccine')">
+						<radio :value="1" checked>是</radio>
+						<radio :value="0">否</radio>
+						<radio :value="2">未知</radio>
+					</radio-group>
 				</view>
 				<view class="line">
 					<label>领养费用</label>
+					<radio-group @change="radioChange($event, 'petCostAdoption')">
+						<radio :value="1">免费</radio>
+						<radio :value="2" checked>押金</radio>
+						<radio :value="3">有偿</radio>
+					</radio-group>
 				</view>
 				<view class="line">
 					<label>押金金额</label>
@@ -68,7 +92,7 @@
 			</view>
 		</view>
 
-		<button :disabled="canSubmit" class="submit btn">确认发布领养信息</button>
+		<button :disabled="canSubmit" class="submit btn" @click="submit">确认发布领养信息</button>
 	</view>
 </template>
 
@@ -76,9 +100,12 @@
 	import { Component, Vue } from 'vue-property-decorator';
 	import { NavBarOptions } from '@/interfaces/navBar';
 	import ImgUpload from '@components/imgUpload.vue';
+	import PetPicker from '@components/PetPicker.vue';
+	import { PickerOptions } from '@/interfaces/petPicker';
+	import { apiPetRelease } from '@/service/api'
 
 	@Component({
-		components: { ImgUpload }
+		components: { ImgUpload, PetPicker }
 	})
 	export default class Index extends Vue {
 		navConfig: NavBarOptions = {
@@ -88,6 +115,62 @@
 			back: false
 		};
 		canSubmit: boolean = false; // 是否可提交
+		releasePetInfo: any = {
+			petAdoptionRequirements: '', // 收养要求
+			petContactsName: '', // 联系人名字
+			petContactsPhone: '', // 联系人电话
+			petContactsWx: '', // 联系人微信号
+			petContactsWxQccodeUrl: '', // 联系人微信二维码
+			petName: '', // name
+			petAge: '', // age
+			petAssortment: '', // 品种
+			petSource: '', // 收养类型
+			petCity: '', // 省市
+			petSex: 0, // 性别
+			petImages: [], // 宠物图片列表
+			petIsSterilization: 1, // 绝育
+			petInsectRepellent: 1, // 驱虫
+			petIsVaccine: 1, // 疫苗
+			petCostAdoption: 2,
+			petDepositAmount: 0 // 押金
+		};
+		// 可选地区参数
+		areaPickerConfig: PickerOptions = {
+			mode: 'region',
+			region: ['全国', '', '']
+		};
+
+		/**
+		 * 单选
+		 * @param $event
+		 * @param name
+		 */
+		radioChange($event: any, name: string) {
+			this.releasePetInfo[name] = +$event.detail.value;
+		};
+
+		/**
+		 * picker 选择
+		 * @param $event
+		 * @param name
+		 */
+		changePicker($event: any, name: string) {
+			interface IParams { // 解决this[picker]报错的问题
+				[key: string]: any
+			}
+
+			// (<IParams>this)[releasePetInfo][name] = val
+		};
+
+		async submit () {
+			await apiPetRelease(this.releasePetInfo)
+			uni.showToast({title: '发布成功'})
+		}
+
+		imgUpload ($event: any, name: string) {
+			if (name === 'petImages') this.releasePetInfo[name] = $event
+		}
+
 	}
 </script>
 
@@ -124,6 +207,10 @@
 				> input {
 					text-align: right;
 				}
+				radio {
+					/*transform:scale(0.7);*/
+					width: 120px;
+				}
 			}
 		}
 
@@ -133,13 +220,14 @@
 			line-height: 110px;
 			position: fixed;
 			bottom: 0;
-			border: none!important;
+			border: none !important;
 			text-align: center;
 			vertical-align: center;
 			color: #ffffff;
 			font-size: 32px;
 			background-color: #EC5C56;
 			clear: both;
+			z-index: 9;
 		}
 	}
 </style>

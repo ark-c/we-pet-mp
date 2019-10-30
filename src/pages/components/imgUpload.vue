@@ -1,6 +1,5 @@
 <template>
 	<view class="img-upload-wrap">
-		<input @change="fileChange" type="file" accept="image/*" :multiple="multipleJudge" style="display: none" ref="ImgUpload"/>
 		<view class="item" v-if="!multipleJudge && imgSrc">
 			<image :src="imgSrc" class="upload-img image"></image>
 			<image class="upload-close" @click="clearImg"></image>
@@ -18,7 +17,8 @@
 </template>
 
 <script lang="ts">
-	import { Component, Vue, Prop } from 'vue-property-decorator';
+	import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+	import { fileUpload } from '@/service/httpRequest';
 
 	@Component
 	export default class ImgUpload extends Vue {
@@ -62,12 +62,26 @@
 		uploadClick() {
 			if (this.multipleJudge && this.imgSrcArr.length >= this.limit) return;
 			if (!this.multipleJudge && this.imgSrc) return;
-			// this.$refs.ImgUpload.click();
+			uni.chooseImage({
+				count: this.limit, //默认9
+				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+				// sourceType: ['album'], // 从相册选择
+				success: async (res: any) => {
+					const tempFilePaths = res.tempFilePaths;
+					tempFilePaths.forEach((item: any) => {
+						fileUpload(item).then((res: any) => {
+							if (!this.multipleJudge) this.imgSrc = res.url;
+							if (this.multipleJudge) this.imgSrcArr.push(res.url);
+						});
+						this.emitData();
+					});
+				}
+			});
 		};
 
 		async upload(formData: any) {
 			// this.$Spin.show()
-			// const uploadUrl = `${process.env.apiPath}/thirdPayment/1/uploadBillImg`
+			const uploadUrl = `http://api.catcatdogdog.net:8081/common/file-upload-batch/v1`;
 			// const res = await axios.post(uploadUrl, formData, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
 			// this.$Spin.hide()
 			// return JSON.parse(decryptData(res.data)).data || []
@@ -83,6 +97,7 @@
 			width: 200px;
 			height: 200px;
 			overflow: hidden;
+			display: inline-block;
 		}
 	}
 </style>

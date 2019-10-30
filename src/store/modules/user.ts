@@ -47,14 +47,14 @@ const mutations: MutationTree<User> = {
 	 * 登录
 	 */
 	USER_LOGIN(state) {
-		if (state.xAuthToken) return;
+		if (state.token) return;
 		uni.login({
 			success: async (res: any) => {
 				if (!res.code) return;
 				const result = await apiLogin(res.code);
 				Object.assign(state, result);
 				uni.setStorageSync('openId', result.openId);
-				uni.setStorageSync('token', result.xAuthToken);
+				uni.setStorageSync('token', result.token);
 				uni.setStorageSync('userInfo', state);
 			}
 		});
