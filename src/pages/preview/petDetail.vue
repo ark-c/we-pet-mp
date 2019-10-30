@@ -6,7 +6,7 @@
 		<view class="header-swiper">
 			<swiper class="swiper" :indicator-dots="swiperConfig.indicatorDots" :indicator-color="swiperConfig.indicatorColor" :indicator-active-color="swiperConfig.indicatorActiveColor" :autoplay="swiperConfig.autoplay" :interval="swiperConfig.interval" :duration="swiperConfig.duration">
 				<swiper-item v-for="(item, index) in detailInfo.petImages" :key="index">
-					<image class="carousel-img" :src="item" @click="previewImage(item)"></image>
+					<image class="carousel-img" :src="item" @click="previewPetImage(item)"></image>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -44,15 +44,15 @@
 			<view class="adoption">
 				<view class="adoption-top">如需领养，请通过以下方式联系</view>
 				<view class="adoption-contact u-flex-b-c">
-					<button @click="handlePhone">
+					<button @click="handlePhone" :class="{'disabled' : !detailInfo.petContactsPhone}">
 						<text class="iconfont icon-phone"></text>
 						<text>电话</text>
 					</button>
-					<button>
+					<button :class="{'disabled' : !detailInfo.petContactsPhone}">
 						<text class="iconfont icon-weixin"></text>
 						<text>微信号</text>
 					</button>
-					<button>
+					<button :class="{'disabled' : !detailInfo.petContactsPhone}">
 						<text class="iconfont icon-qrcode"></text>
 						<text>微信二维码</text>
 					</button>
@@ -60,11 +60,11 @@
 			</view>
 		</view>
 		<view class="footer u-flex-b-c">
-			<view class="tab">
+			<view class="tab" @click="handleCollect">
 				<view class="iconfont icon-collect"></view>
 				<view class="tab-text">3人关注</view>
 			</view>
-			<view class="tab">
+			<view class="tab" @click="handleShare">
 				<view class="iconfont icon-share"></view>
 				<view class="tab-text">3人分享</view>
 			</view>
@@ -84,6 +84,7 @@
 	import { Vue, Component } from 'vue-property-decorator'
 	import { NavBarOptions } from '@/interfaces/navBar'
 	import { petStatus, petSex, trueOrNot, petCostAdoption } from '@/utils/const'
+	import { apiPetDetail, apiReadPet, apiSharePet, apiStarPet } from '@/service/api'
 
 	const detailInfo = {
 		adoptionStatus: 0,
@@ -118,11 +119,12 @@
 
 	@Component({})
 	export default class PetDetail extends Vue {
-		detailInfo = detailInfo
+		petId: number
 		petStatus = petStatus
 		petSex = petSex
 		trueOrNot = trueOrNot
 		petCostAdoption = petCostAdoption
+		detailInfo: any = {}
 		swiperConfig: any = {
 			indicatorDots: true,
 			indicatorColor: 'rgba(255,255,255,0.6)',
@@ -142,7 +144,7 @@
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '品种',
-					value: 'petAssortment'
+					value: 'petAssortmentName'
 				}
 			],
 			[
@@ -199,11 +201,38 @@
 			]
 		]
 
+		onLoad (option: any) {
+			this.petId = option.petId
+			this.getDetail(option.petId)
+			this.getReadCount(option)
+		}
+
+		/**
+		 * 获取详情
+		 */
+		getDetail (id: number) {
+			apiPetDetail(id).then((res: object) => {
+				this.detailInfo = res
+			})
+		}
+
+		/**
+		 * 阅读宠物信息
+		 */
+		getReadCount (params: any) {
+			// readSource来源: share-分享，list-列表，poster-海报
+			let data = {
+				petId: params.petId,
+				readSource: params.source
+			}
+			apiReadPet(data).then()
+		}
+
 		/**
 		 * 预览图片
 		 * @param url
 		 */
-		previewImage (url: string) {
+		previewPetImage (url: string) {
 			uni.previewImage({
 				current: url,
 				indicator: 'number',
@@ -238,6 +267,32 @@
 				fail: (res) => {
 					console.log(res.errMsg)
 				}
+			})
+		}
+
+		/**
+		 * 点击关注
+		 */
+		handleCollect () {
+			apiStarPet(this.petId).then(() => {
+				uni.showToast({
+					icon: 'success',
+					title: '关注成功',
+					duration: 2000
+				})
+			})
+		}
+
+		/**
+		 * 点击分享
+		 */
+		handleShare () {
+			apiSharePet(this.petId).then(() => {
+				uni.showToast({
+					icon: 'success',
+					title: '分享成功',
+					duration: 2000
+				})
 			})
 		}
 	}
@@ -343,13 +398,16 @@
 							border: 0;
 						}
 						&:nth-child(1) {
-							background: #E5E5E5;
+							background: #9eb6f8;
 						}
 						&:nth-child(2) {
 							background: #83D16C;
 						}
 						&:nth-child(3) {
 							background: #EE8491;
+						}
+						&.disabled {
+							background: #E5E5E5;
 						}
 						.iconfont {
 							font-size: 28px;

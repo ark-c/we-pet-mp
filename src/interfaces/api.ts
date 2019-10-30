@@ -2,22 +2,24 @@
 export interface PetParaDto {
 	page?: number; // 页码
 	rows?: number; // 行数
-	petAssortment?: string; // 宠物品种
-	petProvince?: string; // 所在省
-	petCity?: string; // 所在市
-	petDistrict?: string; // 所在区
+	petRace?: string | null; // 宠物种族一级分类
+	petAssortment?: string | null; // 宠物品种二级分类
+	petProvince?: string | null; // 所在省
+	petCity?: string | null; // 所在市
+	petDistrict?: string | null; // 所在区
 }
 
 // 宠物信息列表每项返回参数
 export interface PetItemInfo {
 	petId: number; // 宠物信息id
 	adoptionStatus: string; // 宠物是否被领养状态
-	createAvatarUrl: string; // 创建人头像url
-	createTime: string; // 创建时间
-	createUser: string; // 宠物发布人
-	effectiveStatus: number; // 数据是正常显示还是被删除
-	petAge: string; // 宠物年龄区间
-	petAssortment?: string; // 宠物品种
+	createAvatarUrl?: string; // 创建人头像url
+	createTimeFormat?: string; // 创建时间
+	createUser?: string; // 宠物发布人
+	effectiveStatus?: number; // 数据是正常显示还是被删除
+	petAge?: string; // 宠物年龄区间
+	petAssortmentName?: string; // 二级宠物品种
+	petRaceName?: string; // 一级宠物品种
 	petProvince?: string; // 所在地-省
 	petCity?: string; // 所在地-市
 	petDistrict?: string; // 所在地-区

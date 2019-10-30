@@ -5,7 +5,7 @@
 		mpType: 'app',
 		onLaunch (): void {
 			console.log('App Launch')
-			// this.$store.commit('user/USER_LOGIN')
+			this.$store.commit('user/USER_LOGIN')
 			this.$store.commit('system/UPDATE_SYSTEM_INFO')
 		},
 		onShow (): void {

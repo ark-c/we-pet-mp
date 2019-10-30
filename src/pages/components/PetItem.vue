@@ -5,15 +5,15 @@
 				<image :src="petInfo.createAvatarUrl" class="avatar-small"></image>
 				<view class="u-mg-l-20 u-fz-middle">
 					<view class="u-fz-w">{{petInfo.createUser}}</view>
-					<view>{{petInfo.createTime}}</view>
+					<view class="time">{{petInfo.createTimeFormat}}</view>
 				</view>
 			</view>
-			<text class="u-fz-middle u-fz-w" :class="petInfo.adoptionStatus === 0 ? 'green' : 'gray-e4'">{{petInfoStatus[petInfo.adoptionStatus]}}</text>
+			<text class="u-fz-middle u-fz-w" :class="petInfo.adoptionStatus === 0 ? 'green' : 'gray-e4'">{{petStatus[petInfo.adoptionStatus]}}</text>
 		</view>
 		<view class="item-content" @click="detailClick(petInfo.petId)">
-			<view class="name u-mg-t-40 u-mg-b-20 u-fz-big">
-				<text class="u-fz-w">{{petInfo.petNikeName}}</text>
-				<text>({{petInfo.petAge}}，{{petInfo.petAssortment}})</text>
+			<view class="name u-fz-big">
+				<text class="u-fz-w">{{petInfo.petAssortmentName}}</text>
+				<text>({{petInfo.petAge}}，{{petSex[petInfo.petSex]}})</text>
 			</view>
 			<view class="desc u-text-clamp-3">
 				{{petInfo.petIntroduction}}
@@ -50,36 +50,15 @@
 
 <script lang="ts">
 	import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
-	import { petStatus } from '@/utils/const'
-
-	const petInfo = {
-		createAvatarUrl: 'https://upload-images.jianshu.io/upload_images/4741933-158d7fbd28d08341.jpeg?imageMogr2/auto-orient/strip|imageView2/1/w/180/h/128/format/webp',
-		createTime: 'today',
-		createUser: 'Merlin',
-		adoptionStatus: 0,
-		petAge: 0,
-		petAssortment: '猫',
-		petCity: '北京',
-		petDistrict: '海淀',
-		petId: 0,
-		petImages: ['https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
-			'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132', 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132'],
-		petIntroduction: '宠物介绍',
-		petNikeName: '宠物昵称',
-		petProvince: '北京',
-		petSex: 6,
-		readSum: 10,
-		shareSum: 10,
-		starSum: 10
-	}
+	import { petStatus, petSex } from '@/utils/const'
+	import { PetItemInfo } from '@/interfaces/api'
 
 	@Component
 	export default class PetItem extends Vue {
-		petInfo = petInfo // TODO
+		@Prop() petInfo: PetItemInfo
 
-		// @Prop({ required: false, default: petInfo }) petInfo: any
-
-		petInfoStatus = petStatus
+		petStatus = petStatus
+		petSex = petSex
 
 		@Emit()
 		toDetail (id: number) {}
@@ -88,9 +67,7 @@
 		 * 单项点击
 		 */
 		detailClick (id: number) {
-			console.log(id)
 			this.toDetail(id)
-			// this.$emit('detailClick')
 		}
 	}
 </script>
@@ -103,7 +80,20 @@
 		border-radius: 30px;
 		padding: 32px;
 		box-sizing: border-box;
+		.item-header {
+			.time {
+				font-size: 18px;
+				color: #434343;
+			}
+		}
 		.item-content {
+			.name {
+				margin: 26px 0 16px;
+			}
+			.desc {
+				font-size: 22px;
+				color: #353535;
+			}
 			.pet-image {
 				position: relative;
 				> image {

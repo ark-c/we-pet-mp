@@ -8,7 +8,7 @@
 			<pet-picker @changePicker="changePicker($event,'breedIndex')" :option="breedPickerConfig" class="picker"></pet-picker>
 		</view>
 		<view class="list-wrap">
-			<block v-for="(item, index) in 2" :key="index">
+			<block v-for="(item, index) in petList" :key="index">
 				<pet-item :petInfo="item" @toDetail="toDetail"></pet-item>
 			</block>
 		</view>
@@ -24,7 +24,7 @@
 	import { uNavigateTo } from '@/utils/navigateAction'
 	import { NavBarOptions } from '@/interfaces/navBar'
 	import { PickerOptions } from '@/interfaces/petPicker'
-	import { apiPetList } from '@/service/api'
+	import { apiPetAssortment, apiPetList } from '@/service/api'
 	import { PetItemInfo, PetParaDto } from '@/interfaces/api'
 
 	const namespace: string = 'user'
@@ -46,7 +46,12 @@
 			back: false
 		}
 		// 宠物可选种类列表
-		breedList: string[] = ['不限', '猫咪', '狗狗', '其他宠物']
+		breedList: any[] = [
+			{
+				dicDesc: '不限',
+				dicCode: 'unlimited'
+			}
+		]
 		// 可选地区参数
 		areaPickerConfig: PickerOptions = {
 			mode: 'region',
@@ -56,6 +61,7 @@
 		breedPickerConfig: PickerOptions = {
 			mode: 'selector',
 			pickerList: this.breedList,
+			rangeKey: 'dicDesc',
 			staticText: '品种/'
 		}
 		// 当前选中的地区
@@ -63,26 +69,47 @@
 		// 当前选中的宠物种类的索引
 		breedIndex: string | number = 0
 		// 宠物列表
-		petList: PetItemInfo[]
+		petList: PetItemInfo[] = []
+		page: number = 1
+		pageSize: number = 10
+		total: number = -1
 
 		created () {
-			this.getList()
+			this.getPetAssortment()
+			this.getList(this.page, this.pageSize)
+		}
+
+		onReachBottom () {
+			this.getList(++this.page, this.pageSize)
+		}
+
+		getPetAssortment () {
+			apiPetAssortment().then(res => {
+				this.breedList = [...this.breedList, ...res]
+				this.breedPickerConfig.pickerList = this.breedList
+				console.log('this.breedList', this.breedList)
+			})
 		}
 
 		/**
 		 * 获取宠物列表
 		 */
-		getList () {
+		getList (page: number = 1, pageSize: number = 10) {
+			if (this.petList.length === this.total) {
+				return
+			}
 			let params: PetParaDto = {
-				page: 1,
-				rows: 10,
-				petAssortment: this.breedList[Number(this.breedIndex)],
-				petProvince: this.area[0],
-				petCity: this.area[1],
-				petDistrict: this.area[2]
+				page: page,
+				rows: pageSize,
+				petRace: this.breedList[Number(this.breedIndex)].dicDesc === '不限' ? null : this.breedList[Number(this.breedIndex)].dicCode,
+				petProvince: this.area[0] === '全国' ? null : this.area[0],
+				petCity: this.area[1] || null,
+				petDistrict: this.area[2] || null
 			}
 			apiPetList(params).then((res) => {
-				this.petList = (<PetItemInfo[]>res.items).filter((item) => item.effectiveStatus === 0)
+				this.total = res.total
+				let data = (<PetItemInfo[]>res.items).filter((item) => item.effectiveStatus === 0)
+				this.petList = this.petList.concat(data)
 			})
 		}
 
@@ -99,11 +126,11 @@
 		 * 详情跳转
 		 */
 		toDetail (id: number) {
-			uNavigateTo('/pages/preview/petDetail').then()
+			uNavigateTo(`/pages/preview/petDetail?petId=${id}&source=list`).then()
 		}
 
 		/**
-		 * 子组件传过来的当前选中的picker的索引
+		 * 子组件传过来的当前选中的picker的索引或value值
 		 * @param val
 		 * @param picker
 		 */
@@ -113,7 +140,10 @@
 			}
 
 			(<IParams>this)[picker] = val
-			this.getList()
+			this.page = 1
+			this.total = -1
+			this.petList = []
+			this.getList(this.page, this.pageSize)
 		}
 	}
 </script>
