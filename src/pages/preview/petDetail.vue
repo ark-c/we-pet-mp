@@ -37,22 +37,22 @@
 							<view class="u-flex-b-c publish-time">{{detailInfo.createTime}} 发布该领养信息</view>
 						</view>
 					</view>
-					<view class="publish-count">254人看过</view>
+					<view class="publish-count">{{detailInfo.readSum}}人看过</view>
 				</view>
 				<view class="publish-desc">{{detailInfo.petIntroduction}}</view>
 			</view>
 			<view class="adoption">
 				<view class="adoption-top">如需领养，请通过以下方式联系</view>
 				<view class="adoption-contact u-flex-b-c">
-					<button @click="handlePhone" :class="{'disabled' : !detailInfo.petContactsPhone}">
+					<button @click="handleActionSheet('电话')" :class="{'disabled' : !detailInfo.petContactsPhone}">
 						<text class="iconfont icon-phone"></text>
 						<text>电话</text>
 					</button>
-					<button :class="{'disabled' : !detailInfo.petContactsPhone}">
+					<button @click="handleActionSheet('微信')" :class="{'disabled' : !detailInfo.petContactsWx}">
 						<text class="iconfont icon-weixin"></text>
 						<text>微信号</text>
 					</button>
-					<button :class="{'disabled' : !detailInfo.petContactsPhone}">
+					<button :class="{'disabled' : !detailInfo.petContactsWxQccodeUrl}">
 						<text class="iconfont icon-qrcode"></text>
 						<text>微信二维码</text>
 					</button>
@@ -62,62 +62,53 @@
 		<view class="footer u-flex-b-c">
 			<view class="tab" @click="handleCollect">
 				<view class="iconfont icon-collect"></view>
-				<view class="tab-text">3人关注</view>
+				<view class="tab-text">{{detailInfo.starSum}}人关注</view>
 			</view>
 			<view class="tab" @click="handleShare">
 				<view class="iconfont icon-share"></view>
-				<view class="tab-text">3人分享</view>
+				<view class="tab-text">{{detailInfo.shareSum}}人分享</view>
 			</view>
 			<view class="tab">
 				<view class="iconfont icon-frame"></view>
 				<view class="tab-text">生成海报</view>
 			</view>
-			<view class="tab" @click="handleMore">
+			<view class="tab" @click="handleActionSheet('更多')">
 				<view class="iconfont icon-more"></view>
 				<view class="tab-text">更多</view>
 			</view>
 		</view>
+
+		<action-sheet class="action-sheet-container" v-if="showPhone" @close="closeAction">
+			<view class="list disabled">{{detailInfo.petContactsPhone}}</view>
+			<view class="list">
+				<a :href="'tel:' + detailInfo.petContactsPhone">呼叫</a>
+			</view>
+			<view class="list" @click="copyData(detailInfo.petContactsPhone)">复制号码</view>
+		</action-sheet>
+		<action-sheet class="action-sheet-container" v-if="showWechat" @close="closeAction">
+			<view class="list disabled">{{detailInfo.petContactsWx}}</view>
+			<view class="list" @click="copyData(detailInfo.petContactsWx)">复制微信号</view>
+		</action-sheet>
+		<action-sheet class="action-sheet-container" v-if="showMore" @close="closeAction">
+			<view class="list">删除内容</view>
+			<view class="list">编辑内容</view>
+			<view class="list">设置为『已被领养』</view>
+		</action-sheet>
 	</view>
 </template>
 
 <script lang="ts">
 	import { Vue, Component } from 'vue-property-decorator'
 	import { NavBarOptions } from '@/interfaces/navBar'
+	import ActionSheet from '@components/ActionSheet.vue'
 	import { petStatus, petSex, trueOrNot, petCostAdoption } from '@/utils/const'
 	import { apiPetDetail, apiReadPet, apiSharePet, apiStarPet } from '@/service/api'
 
-	const detailInfo = {
-		adoptionStatus: 0,
-		createAvatarUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
-		createTime: '2018',
-		createUser: '创建人',
-		createUserId: 0,
-		effectiveStatus: 0,
-		petAdoptionRequirements: '宠物领养要求',
-		petAge: '0-3个月',
-		petAssortment: '宠物品种',
-		petCity: '北京',
-		petContactsName: '联系人称呼',
-		petContactsPhone: '联系人电话',
-		petContactsWx: '联系人微信',
-		petContactsWxQccodeUrl: '微信二维码图片',
-		petCostAdoption: 2,
-		petDepositAmount: '押金金额number',
-		petDistrict: '朝阳',
-		petId: 0,
-		petImages: ['https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132', 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132'],
-		petInsectRepellent: 0, // 是否驱虫：1:TRUE,0:FALSE
-		petIntroduction: '宠物介绍',
-		petIsSterilization: 1, // 是否绝育：1:TRUE,0:FALSE
-		petIsVaccine: 1, // 是否打疫苗：1:TRUE,0:FALSE
-		petNikeName: '宠物昵称',
-		petOtherCommon: '宠物其他信息',
-		petProvince: '北京',
-		petSex: 0, // 性别：0:公 1:母
-		petSource: '收养来源'
-	}
-
-	@Component({})
+	@Component({
+		components: {
+			ActionSheet
+		}
+	})
 	export default class PetDetail extends Vue {
 		petId: number
 		petStatus = petStatus
@@ -139,6 +130,9 @@
 			title: '',
 			back: true
 		}
+		showPhone: boolean = false
+		showWechat: boolean = false
+		showMore: boolean = false
 		basicInfo = [
 			[
 				{
@@ -203,7 +197,6 @@
 
 		onLoad (option: any) {
 			this.petId = option.petId
-			this.getDetail(option.petId)
 			this.getReadCount(option)
 		}
 
@@ -225,7 +218,9 @@
 				petId: params.petId,
 				readSource: params.source
 			}
-			apiReadPet(data).then()
+			apiReadPet(data).then(() => {
+				this.getDetail(params.petId)
+			})
 		}
 
 		/**
@@ -241,33 +236,43 @@
 		}
 
 		/**
-		 * 点击更多
+		 * 显示上拉菜单
 		 */
-		handleMore () {
-			uni.showActionSheet({
-				itemList: ['删除内容', '编辑内容', '设置为『已被领养』'],
-				success: (res: any) => {
-					console.log('选中了第' + (res.tapIndex + 1) + '个按钮')
-				},
-				fail: (res) => {
-					console.log(res.errMsg)
-				}
-			})
+		handleActionSheet (type: string) {
+			switch (type) {
+				case '电话':
+					if (this.detailInfo.petContactsPhone) {
+						this.showPhone = true
+					} else {
+						uni.showToast({
+							title: '发布者未提供手机号'
+						})
+						return
+					}
+					break
+				case '微信':
+					if (this.detailInfo.petContactsWx) {
+						this.showWechat = true
+					} else {
+						uni.showToast({
+							title: '发布者未提供微信号'
+						})
+						return
+					}
+					break
+				case '更多':
+					this.showMore = true
+					break
+			}
 		}
 
 		/**
-		 * 点击电话
+		 * 关闭上拉菜单
 		 */
-		handlePhone () {
-			uni.showActionSheet({
-				itemList: [this.detailInfo.petContactsPhone, '呼叫', '复制号码'],
-				success: (res: any) => {
-					console.log('选中了第' + (res.tapIndex + 1) + '个按钮')
-				},
-				fail: (res) => {
-					console.log(res.errMsg)
-				}
-			})
+		closeAction () {
+			this.showPhone = false
+			this.showWechat = false
+			this.showMore = false
 		}
 
 		/**
@@ -295,10 +300,24 @@
 				})
 			})
 		}
+
+		/**
+		 * 复制
+		 * @param text
+		 */
+		copyData (text: string | number) {
+			uni.setClipboardData({
+				data: String(text),
+				success: () => {
+					console.log(text)
+				}
+			})
+		}
 	}
 </script>
 
 <style lang="less" rel="stylesheet/less" scoped>
+	@import "~@/theme/actionSheet.less";
 	.pet-detail-wrap {
 		padding-bottom: 170px;
 		background-color: #f9f9f9;
@@ -421,6 +440,7 @@
 			width: 100vw;
 			height: 117px;
 			position: fixed;
+			z-index: 10;
 			bottom: 0;
 			background: #fff;
 			color: #202020;
