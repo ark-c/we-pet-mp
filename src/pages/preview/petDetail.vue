@@ -52,7 +52,7 @@
 						<text class="iconfont icon-weixin"></text>
 						<text>微信号</text>
 					</button>
-					<button :class="{'disabled' : !detailInfo.petContactsWxQccodeUrl}">
+					<button :class="{'disabled' : !detailInfo.petContactsWxQccodeUrl}" @click="showQrCode = true">
 						<text class="iconfont icon-qrcode"></text>
 						<text>微信二维码</text>
 					</button>
@@ -95,7 +95,9 @@
 			<view class="list">设置为『已被领养』</view>
 		</action-sheet>
 
-		<canvas-poster v-if="showPoster" :imgList="detailInfo.petImages" @close="closePoster"></canvas-poster>
+		<canvas-poster v-if="showPoster" :imgList="detailInfo.petImages" @close="closeModal"></canvas-poster>
+
+		<qr-code v-if="showQrCode" :qrCodeUrl="detailInfo.petContactsWxQccodeUrl" @close="closeModal"></qr-code>
 	</view>
 </template>
 
@@ -104,13 +106,15 @@
 	import { NavBarOptions } from '@/interfaces/navBar'
 	import ActionSheet from '@components/ActionSheet.vue'
 	import CanvasPoster from '@components/CanvasPoster.vue'
+	import QrCode from '@components/QrCode.vue'
 	import { petStatus, petSex, trueOrNot, petCostAdoption } from '@/utils/const'
 	import { apiPetDetail, apiReadPet, apiSharePet, apiStarPet } from '@/service/api'
 
 	@Component({
 		components: {
 			ActionSheet,
-			CanvasPoster
+			CanvasPoster,
+			QrCode
 		}
 	})
 	export default class PetDetail extends Vue {
@@ -138,6 +142,7 @@
 		showWechat: boolean = false
 		showMore: boolean = false
 		showPoster: boolean = false
+		showQrCode: boolean = false
 		basicInfo = [
 			[
 				{
@@ -291,10 +296,11 @@
 		}
 
 		/**
-		 * 关闭海报
+		 * 关闭海报或二维码
 		 */
-		closePoster () {
+		closeModal () {
 			this.showPoster = false
+			this.showQrCode = false
 		}
 
 		/**
