@@ -6,7 +6,7 @@
 		<view class="header-swiper">
 			<swiper class="swiper" :indicator-dots="swiperConfig.indicatorDots" :indicator-color="swiperConfig.indicatorColor" :indicator-active-color="swiperConfig.indicatorActiveColor" :autoplay="swiperConfig.autoplay" :interval="swiperConfig.interval" :duration="swiperConfig.duration">
 				<swiper-item v-for="(item, index) in detailInfo.petImages" :key="index">
-					<image class="carousel-img" :src="item" @click="previewImage(item)"></image>
+					<image class="carousel-img" :src="item" @click="previewPetImage(item)"></image>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -14,14 +14,17 @@
 		<view class="info">
 			<view class="basic-info u-flex-b-c">
 				<text>{{detailInfo.petNikeName ? detailInfo.petNikeName : '还没有名字的' + detailInfo.petAssortment}}</text>
-				<text :class="detailInfo.adoptionStatus === 0 ? 'green' : 'gray-e4'">{{petInfoStatus[detailInfo.adoptionStatus]}}</text>
+				<text :class="detailInfo.adoptionStatus === 0 ? 'green' : 'gray-e4'">{{petStatus[detailInfo.adoptionStatus]}}</text>
 			</view>
 			<view class="detail">
 				<view class="detail-row" v-for="(row,index) in basicInfo" :key="index">
 					<view :class="{'item-large' : item.flex === 2}" class="u-flex-s-c item" v-for="(item,itemIdx) in row" :key="itemIdx">
 						<image :src="item.iconUrl" class="icon"></image>
 						<text>{{item.key}}：</text>
-						<text>{{item.value}}</text>
+						<text v-if="!item.obj">{{detailInfo[item.value]}}</text>
+						<text v-else-if="item.key === '性别'">{{petSex[detailInfo[item.value]]}}</text>
+						<text v-else-if="item.key === '费用'">{{petCostAdoption[detailInfo[item.value]]}}</text>
+						<text v-else>{{trueOrNot[detailInfo[item.value]]}}</text>
 					</view>
 				</view>
 			</view>
@@ -34,22 +37,22 @@
 							<view class="u-flex-b-c publish-time">{{detailInfo.createTime}} 发布该领养信息</view>
 						</view>
 					</view>
-					<view class="publish-count">254人看过</view>
+					<view class="publish-count">{{detailInfo.readSum}}人看过</view>
 				</view>
 				<view class="publish-desc">{{detailInfo.petIntroduction}}</view>
 			</view>
 			<view class="adoption">
 				<view class="adoption-top">如需领养，请通过以下方式联系</view>
 				<view class="adoption-contact u-flex-b-c">
-					<button>
+					<button @click="handleActionSheet('电话')" :class="{'disabled' : !detailInfo.petContactsPhone}">
 						<text class="iconfont icon-phone"></text>
 						<text>电话</text>
 					</button>
-					<button>
+					<button @click="handleActionSheet('微信')" :class="{'disabled' : !detailInfo.petContactsWx}">
 						<text class="iconfont icon-weixin"></text>
 						<text>微信号</text>
 					</button>
-					<button>
+					<button :class="{'disabled' : !detailInfo.petContactsWxQccodeUrl}">
 						<text class="iconfont icon-qrcode"></text>
 						<text>微信二维码</text>
 					</button>
@@ -57,66 +60,62 @@
 			</view>
 		</view>
 		<view class="footer u-flex-b-c">
-			<view class="tab">
+			<view class="tab" @click="handleCollect">
 				<view class="iconfont icon-collect"></view>
-				<view class="tab-text">3人关注</view>
+				<view class="tab-text">{{detailInfo.starSum}}人关注</view>
 			</view>
-			<view class="tab">
+			<view class="tab" @click="handleShare">
 				<view class="iconfont icon-share"></view>
-				<view class="tab-text">3人分享</view>
+				<view class="tab-text">{{detailInfo.shareSum}}人分享</view>
 			</view>
 			<view class="tab">
 				<view class="iconfont icon-frame"></view>
 				<view class="tab-text">生成海报</view>
 			</view>
-			<view class="tab">
+			<view class="tab" @click="handleActionSheet('更多')">
 				<view class="iconfont icon-more"></view>
 				<view class="tab-text">更多</view>
 			</view>
 		</view>
+
+		<action-sheet class="action-sheet-container" v-if="showPhone" @close="closeAction">
+			<view class="list disabled">{{detailInfo.petContactsPhone}}</view>
+			<view class="list">
+				<a :href="'tel:' + detailInfo.petContactsPhone">呼叫</a>
+			</view>
+			<view class="list" @click="copyData(detailInfo.petContactsPhone)">复制号码</view>
+		</action-sheet>
+		<action-sheet class="action-sheet-container" v-if="showWechat" @close="closeAction">
+			<view class="list disabled">{{detailInfo.petContactsWx}}</view>
+			<view class="list" @click="copyData(detailInfo.petContactsWx)">复制微信号</view>
+		</action-sheet>
+		<action-sheet class="action-sheet-container" v-if="showMore" @close="closeAction">
+			<view class="list">删除内容</view>
+			<view class="list">编辑内容</view>
+			<view class="list">设置为『已被领养』</view>
+		</action-sheet>
 	</view>
 </template>
 
 <script lang="ts">
 	import { Vue, Component } from 'vue-property-decorator'
 	import { NavBarOptions } from '@/interfaces/navBar'
-	import { petStatus } from '@/utils/const'
+	import ActionSheet from '@components/ActionSheet.vue'
+	import { petStatus, petSex, trueOrNot, petCostAdoption } from '@/utils/const'
+	import { apiPetDetail, apiReadPet, apiSharePet, apiStarPet } from '@/service/api'
 
-	const detailInfo = {
-		adoptionStatus: 0,
-		createAvatarUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
-		createTime: '2018',
-		createUser: '创建人',
-		createUserId: 0,
-		effectiveStatus: 0,
-		petAdoptionRequirements: '宠物领养要求',
-		petAge: '0-3个月',
-		petAssortment: '宠物品种',
-		petCity: '北京',
-		petContactsName: '联系人称呼',
-		petContactsPhone: '联系人电话',
-		petContactsWx: '联系人微信',
-		petContactsWxQccodeUrl: '微信二维码图片',
-		petCostAdoption: '领养费用情况number',
-		petDepositAmount: '押金金额number',
-		petDistrict: '朝阳',
-		petId: 0,
-		petImages: ['https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132','https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132'],
-		petInsectRepellent: true, // 是否驱虫：1:TRUE,0:FALSE
-		petIntroduction: '宠物介绍',
-		petIsSterilization: true, // 是否绝育：1:TRUE,0:FALSE
-		petIsVaccine: true, // 是否打疫苗：1:TRUE,0:FALSE
-		petNikeName: '宠物昵称',
-		petOtherCommon: '宠物其他信息',
-		petProvince: '北京',
-		petSex: 0, // 性别：0:公 1:母
-		petSource: '收养来源'
-	}
-
-	@Component({})
+	@Component({
+		components: {
+			ActionSheet
+		}
+	})
 	export default class PetDetail extends Vue {
-		detailInfo = detailInfo
-		petInfoStatus = petStatus
+		petId: number
+		petStatus = petStatus
+		petSex = petSex
+		trueOrNot = trueOrNot
+		petCostAdoption = petCostAdoption
+		detailInfo: any = {}
 		swiperConfig: any = {
 			indicatorDots: true,
 			indicatorColor: 'rgba(255,255,255,0.6)',
@@ -131,66 +130,194 @@
 			title: '',
 			back: true
 		}
+		showPhone: boolean = false
+		showWechat: boolean = false
+		showMore: boolean = false
 		basicInfo = [
 			[
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '品种',
-					value: '中华田园猫'
+					value: 'petAssortmentName'
 				}
 			],
 			[
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '性别',
-					value: 'MM'
+					value: 'petSex',
+					obj: true
 				},
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '年龄',
-					value: '0-3个月'
+					value: 'petAge'
 				},
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '状态',
-					value: '流浪'
+					value: 'petSource'
 				}
 			],
 			[
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '绝育',
-					value: '否'
+					value: 'petIsSterilization',
+					obj: true
 				},
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '驱虫',
-					value: '是'
+					value: 'petInsectRepellent',
+					obj: true
 				},
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '疫苗',
-					value: '未知'
+					value: 'petIsVaccine',
+					obj: true
 				}
 			],
 			[
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '费用',
-					value: '免费领养'
+					value: 'petCostAdoption',
+					obj: true
 				},
 				{
 					iconUrl: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKicUgL8bc6EDn7CIiaj15c6Inj2laww5IFhOxVPHnIMM8Wibce5Dgib4XTfUORImluojyXev1QwT7nbg/132',
 					key: '位置',
-					value: '北京市',
+					value: 'petProvince',
 					flex: 2
 				}
 			]
 		]
+
+		onLoad (option: any) {
+			this.petId = option.petId
+			this.getReadCount(option)
+		}
+
+		/**
+		 * 获取详情
+		 */
+		getDetail (id: number) {
+			apiPetDetail(id).then((res: object) => {
+				this.detailInfo = res
+			})
+		}
+
+		/**
+		 * 阅读宠物信息
+		 */
+		getReadCount (params: any) {
+			// readSource来源: share-分享，list-列表，poster-海报
+			let data = {
+				petId: params.petId,
+				readSource: params.source
+			}
+			apiReadPet(data).then(() => {
+				this.getDetail(params.petId)
+			})
+		}
+
+		/**
+		 * 预览图片
+		 * @param url
+		 */
+		previewPetImage (url: string) {
+			uni.previewImage({
+				current: url,
+				indicator: 'number',
+				urls: this.detailInfo.petImages
+			})
+		}
+
+		/**
+		 * 显示上拉菜单
+		 */
+		handleActionSheet (type: string) {
+			switch (type) {
+				case '电话':
+					if (this.detailInfo.petContactsPhone) {
+						this.showPhone = true
+					} else {
+						uni.showToast({
+							title: '发布者未提供手机号'
+						})
+						return
+					}
+					break
+				case '微信':
+					if (this.detailInfo.petContactsWx) {
+						this.showWechat = true
+					} else {
+						uni.showToast({
+							title: '发布者未提供微信号'
+						})
+						return
+					}
+					break
+				case '更多':
+					this.showMore = true
+					break
+			}
+		}
+
+		/**
+		 * 关闭上拉菜单
+		 */
+		closeAction () {
+			this.showPhone = false
+			this.showWechat = false
+			this.showMore = false
+		}
+
+		/**
+		 * 点击关注
+		 */
+		handleCollect () {
+			apiStarPet(this.petId).then(() => {
+				uni.showToast({
+					icon: 'success',
+					title: '关注成功',
+					duration: 2000
+				})
+			})
+		}
+
+		/**
+		 * 点击分享
+		 */
+		handleShare () {
+			apiSharePet(this.petId).then(() => {
+				uni.showToast({
+					icon: 'success',
+					title: '分享成功',
+					duration: 2000
+				})
+			})
+		}
+
+		/**
+		 * 复制
+		 * @param text
+		 */
+		copyData (text: string | number) {
+			uni.setClipboardData({
+				data: String(text),
+				success: () => {
+					console.log(text)
+				}
+			})
+		}
 	}
 </script>
 
 <style lang="less" rel="stylesheet/less" scoped>
+	@import "~@/theme/actionSheet.less";
 	.pet-detail-wrap {
 		padding-bottom: 170px;
 		background-color: #f9f9f9;
@@ -290,13 +417,16 @@
 							border: 0;
 						}
 						&:nth-child(1) {
-							background: #E5E5E5;
+							background: #9eb6f8;
 						}
 						&:nth-child(2) {
 							background: #83D16C;
 						}
 						&:nth-child(3) {
 							background: #EE8491;
+						}
+						&.disabled {
+							background: #E5E5E5;
 						}
 						.iconfont {
 							font-size: 28px;
@@ -310,6 +440,7 @@
 			width: 100vw;
 			height: 117px;
 			position: fixed;
+			z-index: 10;
 			bottom: 0;
 			background: #fff;
 			color: #202020;

@@ -1,16 +1,16 @@
 <template>
 	<view class="picker-wrap">
 		<block v-if="option.mode === 'selector'">
-			<picker @change="bindPickerChange" :value="curIndex" :range="option.pickerList">
+			<picker @change="bindPickerChange" :value="curIndex" :range="option.pickerList" :range-key="option.rangeKey">
 				<view class="uni-input u-flex-c-c">
-					{{option.staticText || ''}}{{option.pickerList[curIndex]}}
+					{{option.staticText || ''}}{{option.pickerList[curIndex][option.rangeKey]}}
 					<text class="iconfont icon-arrow"></text>
 				</view>
 			</picker>
 		</block>
 		<block v-if="option.mode === 'region'">
 			<picker @change="bindPickerChange" :value="areaRegion" mode="region">
-				<view class="uni-input">
+				<view class="uni-input u-flex-c-c">
 					<text v-if="areaRegion[0] === '全国'">全国</text>
 					<view v-else class="u-text-ellipsis">{{areaRegion[0]}}{{areaRegion[1] ? '/' + areaRegion[1] : ''}}{{areaRegion[2] ? '/' + areaRegion[2] : ''}}</view>
 					<text class="iconfont icon-arrow"></text>
