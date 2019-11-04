@@ -36,7 +36,7 @@
 					<text>{{petInfo.readSum}}</text>
 				</view>
 				<view class="u-flex-s-c">
-					<text class="iconfont icon-collect"></text>
+					<text class="iconfont icon-collect" :class="{'yellow': petInfo.userIsStar}"></text>
 					<text>{{petInfo.starSum}}</text>
 				</view>
 				<view class="u-flex-s-c">
@@ -91,7 +91,7 @@
 				margin: 26px 0 16px;
 			}
 			.desc {
-				font-size: 22px;
+				font-size: 24px;
 				color: #353535;
 			}
 			.pet-image {

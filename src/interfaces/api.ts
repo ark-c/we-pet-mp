@@ -29,6 +29,7 @@ export interface PetItemInfo {
 	readSum: number; // 阅读数量
 	shareSum: number; // 分享数量
 	starSum: number; // 关注数量
+	userIsStar: number; // 是否关注
 	[propName: string]: any;
 }
 

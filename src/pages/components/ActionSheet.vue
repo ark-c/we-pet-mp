@@ -1,13 +1,11 @@
 <template>
 	<view class="action-sheet-wrap">
-		<block>
-			<view class="mask animated" :class="animationMask" @click="closeActionSheet">
-				<view class="action-sheet animated" :class="animationSheet">
-					<slot></slot>
-					<view v-if="option.needClose" class="list close" @click="closeActionSheet">{{option.closeText}}</view>
-				</view>
+		<view class="mask animated" catchtouchmove="true" :class="animationMask" @click="closeActionSheet">
+			<view class="action-sheet animated" :class="animationSheet">
+				<slot></slot>
+				<view v-if="option.needClose" class="list close" @click="closeActionSheet">{{option.closeText}}</view>
 			</view>
-		</block>
+		</view>
 	</view>
 </template>
 
@@ -55,7 +53,7 @@
 			width: 100%;
 			height: 100%;
 			background: rgba(0, 0, 0, 0.5);
-			z-index: 999;
+			z-index: 99999;
 		}
 		.action-sheet {
 			width: 100%;
