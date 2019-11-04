@@ -210,7 +210,6 @@
 				title: '布丁领养',
 				path: `/pages/preview/petDetail?petId=${ this.petId }&source=share`,
 				success: () => {   // TODO 微信小程序不支持分享的回调了，下边的代码不执行
-					console.log('shareqqqqqqqq')
 					this.handleShare()
 				}
 			}
@@ -319,7 +318,6 @@
 		handleShare () {
 			apiSharePet(this.petId).then((res) => {
 				this.detailInfo.shareSum = res.count
-				console.log('shareffffffffff')
 			})
 		}
 

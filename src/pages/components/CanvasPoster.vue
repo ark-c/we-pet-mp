@@ -1,5 +1,5 @@
 <template>
-	<div class="poster-wrap">
+	<view class="poster-wrap">
 		<view class="mask u-flex-c-s" catchtouchmove="true" @click="closePoster">
 			<view>
 				<canvas class="canvas" :style="{width: screenWidth * 158 +'px', height: '396px'}" canvas-id="poster"></canvas>
@@ -10,7 +10,7 @@
 				<button class="save-btn">保存到手机</button>
 			</view>
 		</view>
-	</div>
+	</view>
 </template>
 
 <script lang="ts">
@@ -30,7 +30,7 @@
 	const namespace: string = 'system'
 
 	@Component
-	export default class PetDetail extends Vue {
+	export default class CanvasPoster extends Vue {
 		@Getter('systemInfo', { namespace }) public systemInfo: SystemInfo
 		@Prop() imgList: string[]
 		screenWidth: number = 1
@@ -46,8 +46,7 @@
 			}, 500)
 
 
-
-
+			// TODO 图片需要在getImageInfo里边转一下才能在真机上展示，网络图片需要在合法域名内
 			// uni.getImageInfo({
 			// 	src: 'https://xcauto-static.oss-cn-beijing.aliyuncs.com/pic/20190613/code.jpg',
 			// 	success: (image) => {
@@ -61,6 +60,7 @@
 		 * 绘制海报
 		 */
 		canvasPoster () {
+			// TODO 高度没法自己算，文本不会自己换行
 			let rpx = this.screenWidth
 			const context = uni.createCanvasContext('poster', this)
 			context.setFillStyle('transparent')
