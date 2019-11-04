@@ -61,14 +61,14 @@
 		</view>
 		<view class="footer u-flex-b-c">
 			<view class="tab" @click="handleCollect">
-				<view class="iconfont icon-collect"></view>
+				<view class="iconfont icon-collect" :class="{'yellow' : detailInfo.userIsStar === 1}"></view>
 				<view class="tab-text">{{detailInfo.starSum}}人关注</view>
 			</view>
-			<view class="tab" @click="handleShare">
+			<button class="tab" open-type="share">
 				<view class="iconfont icon-share"></view>
 				<view class="tab-text">{{detailInfo.shareSum}}人分享</view>
-			</view>
-			<view class="tab">
+			</button>
+			<view class="tab" @click="showPoster = true">
 				<view class="iconfont icon-frame"></view>
 				<view class="tab-text">生成海报</view>
 			</view>
@@ -94,6 +94,8 @@
 			<view class="list">编辑内容</view>
 			<view class="list">设置为『已被领养』</view>
 		</action-sheet>
+
+		<canvas-poster v-if="showPoster" :imgList="detailInfo.petImages" @close="closePoster"></canvas-poster>
 	</view>
 </template>
 
@@ -101,12 +103,14 @@
 	import { Vue, Component } from 'vue-property-decorator'
 	import { NavBarOptions } from '@/interfaces/navBar'
 	import ActionSheet from '@components/ActionSheet.vue'
+	import CanvasPoster from '@components/CanvasPoster.vue'
 	import { petStatus, petSex, trueOrNot, petCostAdoption } from '@/utils/const'
 	import { apiPetDetail, apiReadPet, apiSharePet, apiStarPet } from '@/service/api'
 
 	@Component({
 		components: {
-			ActionSheet
+			ActionSheet,
+			CanvasPoster
 		}
 	})
 	export default class PetDetail extends Vue {
@@ -133,6 +137,7 @@
 		showPhone: boolean = false
 		showWechat: boolean = false
 		showMore: boolean = false
+		showPoster: boolean = false
 		basicInfo = [
 			[
 				{
@@ -198,6 +203,17 @@
 		onLoad (option: any) {
 			this.petId = option.petId
 			this.getReadCount(option)
+		}
+
+		onShareAppMessage (res: any) {
+			return {
+				title: '布丁领养',
+				path: `/pages/preview/petDetail?petId=${ this.petId }&source=share`,
+				success: () => {   // TODO 微信小程序不支持分享的回调了，下边的代码不执行
+					console.log('shareqqqqqqqq')
+					this.handleShare()
+				}
+			}
 		}
 
 		/**
@@ -276,13 +292,22 @@
 		}
 
 		/**
-		 * 点击关注
+		 * 关闭海报
+		 */
+		closePoster () {
+			this.showPoster = false
+		}
+
+		/**
+		 * 点击关注或取消关注
 		 */
 		handleCollect () {
-			apiStarPet(this.petId).then(() => {
+			apiStarPet(this.petId).then((res) => {
+				this.detailInfo.userIsStar = this.detailInfo.userIsStar === 1 ? 0 : 1
+				this.detailInfo.starSum = res.count
 				uni.showToast({
 					icon: 'success',
-					title: '关注成功',
+					title: this.detailInfo.userIsStar ? '关注成功' : '取消关注成功',
 					duration: 2000
 				})
 			})
@@ -292,12 +317,9 @@
 		 * 点击分享
 		 */
 		handleShare () {
-			apiSharePet(this.petId).then(() => {
-				uni.showToast({
-					icon: 'success',
-					title: '分享成功',
-					duration: 2000
-				})
+			apiSharePet(this.petId).then((res) => {
+				this.detailInfo.shareSum = res.count
+				console.log('shareffffffffff')
 			})
 		}
 
@@ -408,10 +430,10 @@
 				.adoption-contact {
 					> button {
 						width: 182px;
-						padding: 0;
 						text-align: center;
 						font-size: 20px;
 						color: #fff;
+						padding: 18px 0;
 						.flex-box-align-justify(center, center);
 						&:after {
 							border: 0;
@@ -446,6 +468,16 @@
 			color: #202020;
 			font-size: 18px;
 			border-top: 1px solid rgba(11, 5, 9, 0.21);
+			button {
+				background: #fff;
+				color: #202020;
+				font-size: 18px;
+				padding: 0;
+				line-height: initial;
+				&::after {
+					border: none;
+				}
+			}
 			.tab {
 				flex: 1;
 				text-align: center;
