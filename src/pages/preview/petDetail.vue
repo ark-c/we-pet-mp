@@ -52,7 +52,7 @@
 						<text class="iconfont icon-weixin"></text>
 						<text>微信号</text>
 					</button>
-					<button :class="{'disabled' : !detailInfo.petContactsWxQccodeUrl}" @click="showQrCode = true">
+					<button :class="{'disabled' : !detailInfo.petContactsWxQccodeUrl}" @click="handleQrCode">
 						<text class="iconfont icon-qrcode"></text>
 						<text>微信二维码</text>
 					</button>
@@ -97,7 +97,6 @@
 
 		<canvas-poster v-if="showPoster" :imgList="detailInfo.petImages" @close="closeModal"></canvas-poster>
 
-		<qr-code v-if="showQrCode" :qrCodeUrl="detailInfo.petContactsWxQccodeUrl" @close="closeModal"></qr-code>
 	</view>
 </template>
 
@@ -106,15 +105,13 @@
 	import { NavBarOptions } from '@/interfaces/navBar'
 	import ActionSheet from '@components/ActionSheet.vue'
 	import CanvasPoster from '@components/CanvasPoster.vue'
-	import QrCode from '@components/QrCode.vue'
 	import { petStatus, petSex, trueOrNot, petCostAdoption } from '@/utils/const'
 	import { apiPetDetail, apiReadPet, apiSharePet, apiStarPet } from '@/service/api'
 
 	@Component({
 		components: {
 			ActionSheet,
-			CanvasPoster,
-			QrCode
+			CanvasPoster
 		}
 	})
 	export default class PetDetail extends Vue {
@@ -142,7 +139,6 @@
 		showWechat: boolean = false
 		showMore: boolean = false
 		showPoster: boolean = false
-		showQrCode: boolean = false
 		basicInfo = [
 			[
 				{
@@ -287,6 +283,16 @@
 		}
 
 		/**
+		 * 查看二维码
+		 */
+		handleQrCode () {
+			uni.previewImage({
+				urls: ['https://xcauto-static.oss-cn-beijing.aliyuncs.com/pic/20190613/code.jpg'],
+				indicator: 'none'   // 这个属性是只有原生app支持
+			})
+		}
+
+		/**
 		 * 关闭上拉菜单
 		 */
 		closeAction () {
@@ -300,7 +306,6 @@
 		 */
 		closeModal () {
 			this.showPoster = false
-			this.showQrCode = false
 		}
 
 		/**
