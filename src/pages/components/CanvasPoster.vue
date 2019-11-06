@@ -30,10 +30,12 @@
 		mounted () {
 			const { windowWidth } = this.systemInfo
 			this.screenWidth = windowWidth / 375
-			this.init()
+			this.getStaticImgList().then(() => {
+				this.canvasPoster()
+			})
 		}
 
-		async init () {
+		async getStaticImgList () {
 			uni.showLoading({
 				title: '正在生成图片'
 			})
@@ -52,7 +54,6 @@
 			for (let i = 0; i < imgArr.length; i++) {
 				await this.dealImg(imgArr[i])
 			}
-			this.canvasPoster()
 		}
 
 		/**

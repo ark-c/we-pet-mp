@@ -1,7 +1,7 @@
 <template>
 	<view class="release-wrap">
 		<nav-bar :config="navConfig">
-			<text slot="left">取消</text>
+			<text class="nav-cancel" slot="left" @click="handleCancel">取消</text>
 		</nav-bar>
 
 		<view class="content">
@@ -103,6 +103,7 @@
 	import PetPicker from '@components/PetPicker.vue';
 	import { PickerOptions } from '@/interfaces/petPicker';
 	import { apiPetRelease } from '@/service/api'
+	import { uSwitchTab } from '@/utils/navigateAction'
 
 	@Component({
 		components: { ImgUpload, PetPicker }
@@ -171,6 +172,12 @@
 			if (name === 'petImages') this.releasePetInfo[name] = $event
 		}
 
+		/**
+		 * 取消发布
+		 */
+		handleCancel () {
+			uSwitchTab('/pages/preview/index')
+		}
 	}
 </script>
 
@@ -179,6 +186,11 @@
 		font-size: 24px;
 		background-color: #f6f6f6;
 		color: #000;
+		.nav-cancel {
+			padding-left: 16px;
+			color: #E0DEE3;
+			font-size: 32px;
+		}
 		.content {
 			padding: 0 32px 120px;
 		}

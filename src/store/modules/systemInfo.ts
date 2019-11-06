@@ -28,6 +28,8 @@ const getters: GetterTree<SystemInfo, any> = {
 // mutations
 const mutations: MutationTree<SystemInfo> = {
 	UPDATE_SYSTEM_INFO (state: SystemInfo) {
+		console.log('系统信息')
+		if (state) return
 		Object.assign(state, getSystemInfo())
 		uni.setStorageSync('systemInfo', state)
 		return state

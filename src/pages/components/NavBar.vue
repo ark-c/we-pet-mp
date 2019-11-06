@@ -109,7 +109,7 @@
 			height: @androidHeight;
 		}
 		.nav-bar-left {
-			width: @right;
+			min-width: @right;
 			height: 64px;
 			display: flex;
 			align-items: center;

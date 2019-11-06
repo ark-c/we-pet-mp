@@ -90,9 +90,10 @@
 			<view class="list" @click="copyData(detailInfo.petContactsWx)">复制微信号</view>
 		</action-sheet>
 		<action-sheet class="action-sheet-container" v-if="showMore" @close="closeAction">
-			<view class="list">删除内容</view>
-			<view class="list">编辑内容</view>
-			<view class="list">设置为『已被领养』</view>
+			<view class="list" @click="handleDeletePet">删除内容</view>
+			<view class="list" @click="handleEditPet">编辑内容</view>
+			<view class="list" @click="handleComplaintPet">举报</view>
+			<view class="list" @click="completePetStatus">设置为『已被领养』</view>
 		</action-sheet>
 
 		<canvas-poster v-if="showPoster" :imgList="detailInfo.petImages" @close="closeModal"></canvas-poster>
@@ -106,7 +107,8 @@
 	import ActionSheet from '@components/ActionSheet.vue'
 	import CanvasPoster from '@components/CanvasPoster.vue'
 	import { petStatus, petSex, trueOrNot, petCostAdoption } from '@/utils/const'
-	import { apiPetDetail, apiReadPet, apiSharePet, apiStarPet } from '@/service/api'
+	import { apiComplaintPet, apiCompleteAdoption, apiDeletePet, apiPetDetail, apiReadPet, apiSharePet, apiStarPet } from '@/service/api'
+	import { uNavigateTo, uSwitchTab } from '@/utils/navigateAction'
 
 	@Component({
 		components: {
@@ -261,7 +263,8 @@
 						this.showPhone = true
 					} else {
 						uni.showToast({
-							title: '发布者未提供手机号'
+							title: '发布者未提供手机号',
+							icon: 'none'
 						})
 						return
 					}
@@ -271,7 +274,8 @@
 						this.showWechat = true
 					} else {
 						uni.showToast({
-							title: '发布者未提供微信号'
+							title: '发布者未提供微信号',
+							icon: 'none'
 						})
 						return
 					}
@@ -286,8 +290,15 @@
 		 * 查看二维码
 		 */
 		handleQrCode () {
+			if (!this.detailInfo.petContactsWxQccodeUrl) {
+				uni.showToast({
+					title: '发布者未提供微信二维码',
+					icon: 'none'
+				})
+				return
+			}
 			uni.previewImage({
-				urls: ['https://xcauto-static.oss-cn-beijing.aliyuncs.com/pic/20190613/code.jpg'],
+				urls: this.detailInfo.petContactsWxQccodeUrl.split(','),
 				indicator: 'none'   // 这个属性是只有原生app支持
 			})
 		}
@@ -342,6 +353,56 @@
 				success: () => {
 					console.log(text)
 				}
+			})
+		}
+
+		/**
+		 * 将宠物设置为已被领养
+		 */
+		completePetStatus () {
+			apiCompleteAdoption(this.petId).then(() => {
+				this.getDetail(this.petId)
+				uni.showToast({
+					icon: 'success',
+					title: '设置成功',
+					duration: 2000
+				})
+			})
+		}
+
+		/**
+		 * 删除宠物
+		 */
+		handleDeletePet () {
+			apiDeletePet(this.petId).then(() => {
+				uni.showToast({
+					icon: 'success',
+					title: '删除成功',
+					duration: 2000
+				})
+				setTimeout(() => {
+					uSwitchTab('/pages/preview/index')
+				}, 2000)
+			})
+		}
+
+		/**
+		 * 跳转到编辑页面
+		 */
+		handleEditPet () {
+			uNavigateTo('/pages/release/release?petId=' + this.petId)
+		}
+
+		/**
+		 * 举报宠物
+		 */
+		handleComplaintPet () {
+			apiComplaintPet(this.petId).then(() => {
+				uni.showToast({
+					icon: 'success',
+					title: '举报成功',
+					duration: 2000
+				})
 			})
 		}
 	}
