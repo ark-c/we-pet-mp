@@ -14,7 +14,8 @@ export const petSex = {
 // 宠物是否绝育、宠物是否驱虫、宠物是否打疫苗
 export const trueOrNot = {
 	1: '是',
-	0: '否'
+	0: '否',
+	2:'未知'
 }
 
 // 领养费用情况
