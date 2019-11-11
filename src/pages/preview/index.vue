@@ -87,7 +87,6 @@
 			apiPetAssortment().then(res => {
 				this.breedList = [...this.breedList, ...res]
 				this.breedPickerConfig.pickerList = this.breedList
-				console.log('this.breedList', this.breedList)
 			})
 		}
 

@@ -52,7 +52,7 @@
 						<text class="iconfont icon-weixin"></text>
 						<text>微信号</text>
 					</button>
-					<button :class="{'disabled' : !detailInfo.petContactsWxQccodeUrl}">
+					<button :class="{'disabled' : !detailInfo.petContactsWxQccodeUrl}" @click="handleQrCode">
 						<text class="iconfont icon-qrcode"></text>
 						<text>微信二维码</text>
 					</button>
@@ -90,12 +90,14 @@
 			<view class="list" @click="copyData(detailInfo.petContactsWx)">复制微信号</view>
 		</action-sheet>
 		<action-sheet class="action-sheet-container" v-if="showMore" @close="closeAction">
-			<view class="list">删除内容</view>
-			<view class="list">编辑内容</view>
-			<view class="list">设置为『已被领养』</view>
+			<view class="list" @click="handleDeletePet">删除内容</view>
+			<view class="list" @click="handleEditPet">编辑内容</view>
+			<view class="list" @click="handleComplaintPet">举报</view>
+			<view class="list" @click="completePetStatus">设置为『已被领养』</view>
 		</action-sheet>
 
-		<canvas-poster v-if="showPoster" :imgList="detailInfo.petImages" @close="closePoster"></canvas-poster>
+		<canvas-poster v-if="showPoster" :imgList="detailInfo.petImages" @close="closeModal"></canvas-poster>
+
 	</view>
 </template>
 
@@ -105,7 +107,8 @@
 	import ActionSheet from '@components/ActionSheet.vue'
 	import CanvasPoster from '@components/CanvasPoster.vue'
 	import { petStatus, petSex, trueOrNot, petCostAdoption } from '@/utils/const'
-	import { apiPetDetail, apiReadPet, apiSharePet, apiStarPet } from '@/service/api'
+	import { apiComplaintPet, apiCompleteAdoption, apiDeletePet, apiPetDetail, apiReadPet, apiSharePet, apiStarPet } from '@/service/api'
+	import { uNavigateTo, uSwitchTab } from '@/utils/navigateAction'
 
 	@Component({
 		components: {
@@ -210,7 +213,6 @@
 				title: '布丁领养',
 				path: `/pages/preview/petDetail?petId=${ this.petId }&source=share`,
 				success: () => {   // TODO 微信小程序不支持分享的回调了，下边的代码不执行
-					console.log('shareqqqqqqqq')
 					this.handleShare()
 				}
 			}
@@ -261,7 +263,8 @@
 						this.showPhone = true
 					} else {
 						uni.showToast({
-							title: '发布者未提供手机号'
+							title: '发布者未提供手机号',
+							icon: 'none'
 						})
 						return
 					}
@@ -271,7 +274,8 @@
 						this.showWechat = true
 					} else {
 						uni.showToast({
-							title: '发布者未提供微信号'
+							title: '发布者未提供微信号',
+							icon: 'none'
 						})
 						return
 					}
@@ -280,6 +284,23 @@
 					this.showMore = true
 					break
 			}
+		}
+
+		/**
+		 * 查看二维码
+		 */
+		handleQrCode () {
+			if (!this.detailInfo.petContactsWxQccodeUrl) {
+				uni.showToast({
+					title: '发布者未提供微信二维码',
+					icon: 'none'
+				})
+				return
+			}
+			uni.previewImage({
+				urls: this.detailInfo.petContactsWxQccodeUrl.split(','),
+				indicator: 'none'   // 这个属性是只有原生app支持
+			})
 		}
 
 		/**
@@ -292,9 +313,9 @@
 		}
 
 		/**
-		 * 关闭海报
+		 * 关闭海报或二维码
 		 */
-		closePoster () {
+		closeModal () {
 			this.showPoster = false
 		}
 
@@ -319,7 +340,6 @@
 		handleShare () {
 			apiSharePet(this.petId).then((res) => {
 				this.detailInfo.shareSum = res.count
-				console.log('shareffffffffff')
 			})
 		}
 
@@ -333,6 +353,56 @@
 				success: () => {
 					console.log(text)
 				}
+			})
+		}
+
+		/**
+		 * 将宠物设置为已被领养
+		 */
+		completePetStatus () {
+			apiCompleteAdoption(this.petId).then(() => {
+				this.getDetail(this.petId)
+				uni.showToast({
+					icon: 'success',
+					title: '设置成功',
+					duration: 2000
+				})
+			})
+		}
+
+		/**
+		 * 删除宠物
+		 */
+		handleDeletePet () {
+			apiDeletePet(this.petId).then(() => {
+				uni.showToast({
+					icon: 'success',
+					title: '删除成功',
+					duration: 2000
+				})
+				setTimeout(() => {
+					uSwitchTab('/pages/preview/index')
+				}, 2000)
+			})
+		}
+
+		/**
+		 * 跳转到编辑页面
+		 */
+		handleEditPet () {
+			uNavigateTo('/pages/release/release?petId=' + this.petId)
+		}
+
+		/**
+		 * 举报宠物
+		 */
+		handleComplaintPet () {
+			apiComplaintPet(this.petId).then(() => {
+				uni.showToast({
+					icon: 'success',
+					title: '举报成功',
+					duration: 2000
+				})
 			})
 		}
 	}

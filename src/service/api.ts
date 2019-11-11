@@ -8,7 +8,10 @@ const api: any = {
 	petAssortment: '/common/get-dict/pet_assortment',
 	readPet: 'user/read-pet/v1',
 	sharePet: 'user/share-pet/v1',
-	starPet: 'user/star-pet/v1'
+	starPet: 'user/star-pet/v1',
+	completeAdoption: 'user/update-status-complete/v1',
+	deletePet: 'user/delete-status-by-author/v1',
+	complaintPet: 'user/complaint-pet/v1'
 }
 
 /**
@@ -58,6 +61,23 @@ export function apiSharePet (petId: number): Promise<any> { return http.get(api.
  */
 export function apiStarPet (petId: number): Promise<any> { return http.get(api.starPet, {petId}) }
 
+/**
+ * 将宠物设置为已领养
+ * @param petId
+ */
+export function apiCompleteAdoption (petId: number): Promise<any> { return http.get(api.completeAdoption, {petId}) }
+
+/**
+ * 删除宠物信息
+ * @param petId
+ */
+export function apiDeletePet (petId:number): Promise<any> { return http.get(api.deletePet, {petId})}
+
+/**
+ * 举报宠物
+ * @param petId
+ */
+export function apiComplaintPet (petId:number): Promise<any> { return http.get(api.complaintPet, {petId})}
 
 
 
