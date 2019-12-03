@@ -26,7 +26,6 @@
 	import { PickerOptions } from '@/interfaces/petPicker'
 	import { apiPetAssortment, apiPetList } from '@/service/api'
 	import { PetItemInfo, PetParaDto } from '@/interfaces/api'
-	import loginMixin from '@/mixins/loginMixin'
 
 	const namespace: string = 'user'
 
@@ -34,10 +33,7 @@
 		components: {
 			PetItem,
 			PetPicker
-		},
-		mixins: [
-			loginMixin
-		]
+		}
 	})
 	export default class Index extends Vue {
 		@Getter('user', { namespace }) userInfo: User
