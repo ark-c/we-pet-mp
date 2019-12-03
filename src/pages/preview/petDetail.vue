@@ -90,14 +90,15 @@
 			<view class="list" @click="copyData(detailInfo.petContactsWx)">复制微信号</view>
 		</action-sheet>
 		<action-sheet class="action-sheet-container" v-if="showMore" @close="closeAction">
-			<view class="list" @click="handleDeletePet">删除内容</view>
-			<view class="list" @click="handleEditPet">编辑内容</view>
-			<view class="list" @click="handleComplaintPet">举报</view>
-			<view class="list" @click="completePetStatus">设置为『已被领养』</view>
+			<view v-if="$store.state.user === detailInfo.createUserId">
+				<view class="list" @click="handleDeletePet">删除内容</view>
+				<view class="list" @click="handleEditPet">编辑内容</view>
+				<view class="list" @click="completePetStatus">设置为『已被领养』</view>
+			</view>
+			<view v-else class="list" @click="handleComplaintPet">举报</view>
 		</action-sheet>
 
-		<canvas-poster v-if="showPoster" :imgList="detailInfo.petImages" @close="closeModal"></canvas-poster>
-
+		<canvas-poster v-if="showPoster" :detailInfo="detailInfo" @close="closeModal"></canvas-poster>
 	</view>
 </template>
 
@@ -204,16 +205,18 @@
 		]
 
 		onLoad (option: any) {
+			console.log(this.$store.state.user)
 			this.petId = option.petId
 			this.getReadCount(option)
 		}
 
 		onShareAppMessage (res: any) {
+			this.handleShare()
 			return {
 				title: '布丁领养',
 				path: `/pages/preview/petDetail?petId=${ this.petId }&source=share`,
-				success: () => {   // TODO 微信小程序不支持分享的回调了，下边的代码不执行
-					this.handleShare()
+				success: () => {
+
 				}
 			}
 		}
