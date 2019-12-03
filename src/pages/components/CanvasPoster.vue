@@ -48,8 +48,8 @@
 				'../../static/poster-img/top-cat.png',
 				'../../static/poster-img/top-dog.png',
 				'../../static/poster-img/top-pet.png',
-				'https://xcauto-static.oss-cn-beijing.aliyuncs.com/pic/20190613/code.jpg',
-				this.imgList[0]
+				// 'https://xcauto-static.oss-cn-beijing.aliyuncs.com/pic/20190613/code.jpg',
+				// this.imgList[0]
 			]
 			for (let i = 0; i < imgArr.length; i++) {
 				await this.dealImg(imgArr[i])
@@ -79,6 +79,7 @@
 		 */
 		canvasPoster () {
 			// TODO 高度没法自己算，文本不会自己换行
+			console.log('staticImg',this.staticImg)
 			let rpx = this.screenWidth
 			const context = uni.createCanvasContext('poster', this)
 			let concatStr = '../../'
@@ -92,7 +93,7 @@
 			context.setLineWidth(1)
 			context.setStrokeStyle('#434343')
 			context.strokeRect(6 * rpx, 78 * rpx, 146 * rpx, 120 * rpx)
-			context.drawImage(this.staticImg[9], 6 * rpx, 78 * rpx, 146 * rpx, 120 * rpx)
+			// context.drawImage(this.staticImg[9], 6 * rpx, 78 * rpx, 146 * rpx, 120 * rpx)
 
 			context.setFillStyle('#fff')
 			context.setFontSize(10)
@@ -125,7 +126,7 @@
 			context.fillText('坐标：中华田园猫', 10 * rpx, (78 + 7 * 18 + 142) * rpx)
 			context.fillText('联系人：请在小程序内', 10 * rpx, (78 + 7 * 18 + 152) * rpx)
 
-			context.drawImage(this.staticImg[8], 106 * rpx, (78 + 7 * 18 + 110) * rpx, 40 * rpx, 40 * rpx)
+			// context.drawImage(this.staticImg[8], 106 * rpx, (78 + 7 * 18 + 110) * rpx, 40 * rpx, 40 * rpx)
 			context.stroke()
 			context.draw()
 
