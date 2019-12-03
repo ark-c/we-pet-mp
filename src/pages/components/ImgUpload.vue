@@ -34,23 +34,6 @@
 			if (!this.multipleJudge) this.$emit('imgUpload', this.imgSrc);
 		};
 
-		fileChange(el: any) {
-			console.log('fileChange');
-			const files = el.target.files;
-			if (this.imgSrcArr.length + files.length > this.limit) {
-				// this.$Message.info('up to three')
-				return;
-			}
-			let formData = new FormData();
-			for (let i = 0; i < files.length; i++) {
-				formData.append('multipartFiles', files[i]);
-			}
-			// this.upload(formData).then((res: Array<any>) => {
-			// 	this.imgSrcArr.push(...res);
-			// 	this.emitData();
-			// });
-		};
-
 		clearImg(index: number) {
 			if (index === undefined) this.imgSrc = '';
 			else {
@@ -78,14 +61,6 @@
 				}
 			});
 		};
-
-		async upload(formData: any) {
-			// this.$Spin.show()
-			const uploadUrl = `http://api.catcatdogdog.net:8081/common/file-upload-batch/v1`;
-			// const res = await axios.post(uploadUrl, formData, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
-			// this.$Spin.hide()
-			// return JSON.parse(decryptData(res.data)).data || []
-		}
 	}
 </script>
 
