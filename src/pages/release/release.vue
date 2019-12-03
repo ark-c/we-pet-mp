@@ -124,7 +124,7 @@
 			petContactsWxQccodeUrl: '', // 联系人微信二维码
 			petName: '', // name
 			petAge: '', // age
-			petAssortment: '', // 品种
+			petAssortment: 1, // 品种
 			petSource: '', // 收养类型
 			petProvince: '', // 所在地-省
 			petCity: '', // 所在地-市

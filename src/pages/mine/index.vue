@@ -31,71 +31,71 @@
 </template>
 
 <script lang="ts">
-	import { Component, Vue } from 'vue-property-decorator'
-	import PetItem from '@components/PetItem.vue'
-	import { Getter } from 'vuex-class'
-	import { User } from '@/store/types'
-	import { NavBarOptions } from '@/interfaces/navBar'
-	import { PetItemInfo, PetParaDto } from '@/interfaces/api'
-	import { apiPetList } from '@/service/api'
+	import { Component, Vue } from 'vue-property-decorator';
+	import PetItem from '@components/PetItem.vue';
+	import { Getter } from 'vuex-class';
+	import { User } from '@/store/types';
+	import { NavBarOptions } from '@/interfaces/navBar';
+	import { PetItemInfo, PetParaDto } from '@/interfaces/api';
+	import { apiPetList } from '@/service/api';
 
-	const namespace: string = 'user'
+	const namespace: string = 'user';
 	@Component({
 		components: { PetItem }
 	})
 	export default class Index extends Vue {
-		@Getter('user', { namespace }) userInfo: User
+		@Getter('user', { namespace }) userInfo: User;
 
 		navConfig: NavBarOptions = {
 			color: '#ffffff',
 			backgroundColor: '#EC6863',
 			title: '',
 			back: false
-		}
-		activeTab: number = 0 // tab
-		releaseList: Array<any> = [] // 我的发布
-		flowList: Array<any> = [] // 我的关注
-		petList: PetItemInfo[] = []
-		page: number = 1
-		pageSize: number = 10
-		total: number = -1
+		};
+		activeTab: number = 0; // tab
+		releaseList: Array<any> = []; // 我的发布
+		flowList: Array<any> = []; // 我的关注
+		petList: PetItemInfo[] = [];
+		page: number = 1;
+		pageSize: number = 10;
+		total: number = -1;
 
-		created () {
-			this.getList(this.page, this.pageSize)
+		created() {
+			this.getList(this.page, this.pageSize);
 		}
 
-		onReachBottom () {
-			this.getList(++this.page, this.pageSize)
+		onReachBottom() {
+			this.getList(++this.page, this.pageSize);
 		}
 
 		/**
 		 * 获取宠物列表
 		 */
-		getList (page: number = 1, pageSize: number = 10) {
+		getList(page: number = 1, pageSize: number = 10) {
 			if (this.petList.length === this.total) {
-				return
+				return;
 			}
 			let params: PetParaDto = {
 				page: page,
 				rows: pageSize
-			}
+			};
 			apiPetList(params).then((res) => {
-				this.total = res.total
-				let data = (<PetItemInfo[]>res.items).filter((item) => item.effectiveStatus === 0)
-				this.petList = this.petList.concat(data)
-			})
+				this.total = res.total;
+				let data = (<PetItemInfo[]>res.items).filter((item) => item.effectiveStatus === 0);
+				this.petList = this.petList.concat(data);
+			});
 		}
 
 		/**
 		 * 切换tab
 		 * @param type
 		 */
-		switchTab (type: number) {
-			this.activeTab = type
-			this.page = 1
-			this.total = -1
-			this.petList = []
-			this.getList(this.page, this.pageSize)
+		switchTab(type: number) {
+			this.activeTab = type;
+			this.page = 1;
+			this.total = -1;
+			this.petList = [];
+			this.getList(this.page, this.pageSize);
 		}
 	}
 </script>
@@ -122,6 +122,7 @@
 			background-color: #EC6863;
 			text-align: center;
 			.avatar-img {
+				display: inline-block !important;
 				.base-circle(145px);
 			}
 			.tab {

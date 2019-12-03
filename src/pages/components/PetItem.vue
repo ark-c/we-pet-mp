@@ -97,6 +97,7 @@
 			.pet-image {
 				position: relative;
 				> image {
+					display: block !important;
 					.base-square(320px);
 				}
 				.pet-image-desc {

@@ -6,7 +6,7 @@ export const petStatus = {
 }
 
 // 宠物性别
-export const petSex = {
+export const petSex: any = {
 	0: 'GG', // 公
 	1: 'MM' // 母
 }

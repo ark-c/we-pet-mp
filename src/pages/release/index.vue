@@ -43,7 +43,7 @@
 			.base-position(60%, 50%);
 			text-align: center;
 			image {
-				display: block;
+				display: block !important;
 				.base-square(183px);
 				margin-bottom: 20px;
 			}
