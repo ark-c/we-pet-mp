@@ -68,7 +68,7 @@
 						resolve(image)
 					},
 					fail: (err) => {
-						reject(err)
+						reject(err, img)
 					}
 				})
 			})
@@ -153,7 +153,7 @@
 						}
 					})
 				}
-			}, this)
+			})
 		}
 
 		@Emit()

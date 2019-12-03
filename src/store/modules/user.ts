@@ -1,4 +1,4 @@
-import { GetterTree, Module, MutationTree } from 'vuex'
+import { ActionTree, GetterTree, Module, MutationTree } from 'vuex';
 import { User } from '../types'
 import { apiLogin } from '@/service/api'
 
@@ -18,6 +18,12 @@ const state: User = { ...userInfo }
 const getters: GetterTree<User, any> = {
 	user (state): User {
 		return state
+	}
+}
+
+const actions: ActionTree<User, any> = {
+	userLogin ({commit}) {
+		commit('USER_LOGIN')
 	}
 }
 const mutations: MutationTree<User> = {
@@ -66,6 +72,7 @@ const user: Module<User, any> = {
 	namespaced,
 	state,
 	getters,
+	actions,
 	mutations
 }
 

@@ -7,7 +7,7 @@
 		<view class="content">
 			<view class="header info">
 				<view class="title">说说宠物情况以及领养要求</view>
-				<textarea name="" id="" placeholder="输入宠物信息" class="pet-info" placeholder-class="placeholder-class	"></textarea>
+				<textarea name="" id="" placeholder="输入宠物信息" v-model="releasePetInfo.petAdoptionRequirements" class="pet-info" placeholder-class="placeholder-class	"></textarea>
 				<img-upload :limit="6" :multipleJudge="true" @imgUpload="imgUpload($event,'petImages')"></img-upload>
 			</view>
 			<view class="contact-info info">
@@ -37,7 +37,7 @@
 				</view>
 				<view class="line">
 					<label>品种</label>
-					<!--<pet-picker @changePicker="changePicker($event,'area')" :option="areaPickerConfig" class="picker"></pet-picker>-->
+					<!--<pet-picker @changePicker="changePicker($event,'')" :option="areaPickerConfig" class="picker"></pet-picker>-->
 				</view>
 				<view class="line">
 					<label>年龄</label>
@@ -99,11 +99,11 @@
 <script lang="ts">
 	import { Component, Vue } from 'vue-property-decorator';
 	import { NavBarOptions } from '@/interfaces/navBar';
-	import ImgUpload from '@components/imgUpload.vue';
+	import ImgUpload from '@components/ImgUpload.vue';
 	import PetPicker from '@components/PetPicker.vue';
 	import { PickerOptions } from '@/interfaces/petPicker';
-	import { apiPetRelease } from '@/service/api'
-	import { uSwitchTab } from '@/utils/navigateAction'
+	import { apiPetRelease } from '@/service/api';
+	import { uSwitchTab } from '@/utils/navigateAction';
 
 	@Component({
 		components: { ImgUpload, PetPicker }
@@ -126,7 +126,9 @@
 			petAge: '', // age
 			petAssortment: '', // 品种
 			petSource: '', // 收养类型
-			petCity: '', // 省市
+			petProvince: '', // 所在地-省
+			petCity: '', // 所在地-市
+			petDistrict: '', // 所在地-区
 			petSex: 0, // 性别
 			petImages: [], // 宠物图片列表
 			petIsSterilization: 1, // 绝育
@@ -156,27 +158,30 @@
 		 * @param name
 		 */
 		changePicker($event: any, name: string) {
-			interface IParams { // 解决this[picker]报错的问题
-				[key: string]: any
+			switch (name) {
+				case 'area':
+					[this.releasePetInfo.petProvince, this.releasePetInfo.petCity, this.releasePetInfo.petDistrict] = $event
+					break
+				default:
+					break
 			}
 
-			// (<IParams>this)[releasePetInfo][name] = val
 		};
 
-		async submit () {
-			await apiPetRelease(this.releasePetInfo)
-			uni.showToast({title: '发布成功'})
+		async submit() {
+			await apiPetRelease(this.releasePetInfo);
+			uni.showToast({ title: '发布成功' });
 		}
 
-		imgUpload ($event: any, name: string) {
-			if (name === 'petImages') this.releasePetInfo[name] = $event
+		imgUpload($event: any, name: string) {
+			if (name === 'petImages') this.releasePetInfo[name] = $event;
 		}
 
 		/**
 		 * 取消发布
 		 */
-		handleCancel () {
-			uSwitchTab('/pages/preview/index')
+		handleCancel() {
+			uSwitchTab('/pages/preview/index');
 		}
 	}
 </script>
