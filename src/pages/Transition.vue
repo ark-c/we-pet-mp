@@ -9,15 +9,15 @@
 
 	@Component
 	export default class Transition extends Vue {
-		async onLoad(options) {
+		async onLoad(options: any) {
 			uni.showLoading();
 			if (!this.$store.state.user.token) {
-				const wxLogin = await uni.login();
+				const wxLogin: any = await uni.login();
 				const res = wxLogin[1];
 				if (res.code) {
 					const apiResult = await apiLogin(res.code);
-					const result = apiResult.data.data || {}
-					console.log(result)
+					const result = apiResult.data.data || {};
+					console.log(result);
 					// @ts-ignore
 					this.$store.commit('user/UPDATE_USER', result);
 					uni.setStorageSync('openId', result.openId);
@@ -37,7 +37,7 @@
 		 * @param type '0'：navigateTo, '1': switchTab
 		 * @param uri
 		 */
-		navigateAction(type, uri) {
+		navigateAction(type: string | number, uri: string) {
 			switch (type) {
 				case '0':
 					uRelaunch(uri);

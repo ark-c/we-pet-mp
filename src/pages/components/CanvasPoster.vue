@@ -14,31 +14,31 @@
 </template>
 
 <script lang="ts">
-	import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
-	import { Getter } from 'vuex-class'
-	import { SystemInfo } from '@/store/types'
+	import { Vue, Component, Prop, Emit } from 'vue-property-decorator';
+	import { Getter } from 'vuex-class';
+	import { SystemInfo } from '@/store/types';
 
-	const namespace: string = 'system'
+	const namespace: string = 'system';
 
 	@Component
 	export default class CanvasPoster extends Vue {
-		@Getter('systemInfo', { namespace }) public systemInfo: SystemInfo
-		@Prop() imgList: string[]
-		screenWidth: number = 1
-		staticImg: any | never[] = []
+		@Getter('systemInfo', { namespace }) public systemInfo: SystemInfo;
+		@Prop() imgList: string[];
+		screenWidth: number = 1;
+		staticImg: any | never[] = [];
 
-		mounted () {
-			const { windowWidth } = this.systemInfo
-			this.screenWidth = windowWidth / 375
+		mounted() {
+			const { windowWidth } = this.systemInfo;
+			this.screenWidth = windowWidth / 375;
 			this.getStaticImgList().then(() => {
-				this.canvasPoster()
-			})
+				this.canvasPoster();
+			});
 		}
 
-		async getStaticImgList () {
+		async getStaticImgList() {
 			uni.showLoading({
 				title: '正在生成图片'
-			})
+			});
 			let imgArr = [
 				'../../static/poster-img/adoption.png',
 				'../../static/poster-img/bottom.png',
@@ -50,7 +50,7 @@
 				'../../static/poster-img/top-pet.png',
 				'https://xcauto-static.oss-cn-beijing.aliyuncs.com/pic/20190613/code.jpg',
 				this.imgList[0]
-			]
+			];
 			for (let i = 0; i < imgArr.length; i++) {
 				// await this.dealImg(imgArr[i])
 			}
@@ -59,123 +59,123 @@
 		/**
 		 * 图片需要在getImageInfo里边转一下才能在真机上展示，网络图片需要在合法域名内
 		 */
-		dealImg (img: any) {
+		dealImg(img: any) {
 			return new Promise((resolve, reject) => {
 				uni.getImageInfo({
 					src: img,
 					success: (image: any) => {
-						this.staticImg.push(image.path)
-						resolve(image)
+						this.staticImg.push(image.path);
+						resolve(image);
 					},
 					fail: (err) => {
-						reject(err, img)
+						reject(err, img);
 					}
-				})
-			})
+				});
+			});
 		}
 
 		/**
 		 * 绘制海报
 		 */
-		canvasPoster () {
+		canvasPoster() {
 			// TODO 高度没法自己算，文本不会自己换行
-			let rpx = this.screenWidth
-			const context = uni.createCanvasContext('poster', this)
-			let concatStr = '../../'
-			context.setFillStyle('transparent')
+			let rpx = this.screenWidth;
+			const context = uni.createCanvasContext('poster', this);
+			let concatStr = '../../';
+			context.setFillStyle('transparent');
 			// context.drawImage(concatStr + this.staticImg[7], 0, 0, 158 * rpx, 78 * rpx)
-			let middleLength = 36
+			let middleLength = 36;
 			for (let i = 0; i < middleLength; i++) {
 				// context.drawImage(concatStr + this.staticImg[3], 0, (78 + 7 * i) * rpx, 158 * rpx, 7 * rpx)
 			}
 
-			context.setLineWidth(1)
-			context.setStrokeStyle('#434343')
-			context.strokeRect(6 * rpx, 78 * rpx, 146 * rpx, 120 * rpx)
+			context.setLineWidth(1);
+			context.setStrokeStyle('#434343');
+			context.strokeRect(6 * rpx, 78 * rpx, 146 * rpx, 120 * rpx);
 			// context.drawImage(this.staticImg[9], 6 * rpx, 78 * rpx, 146 * rpx, 120 * rpx)
 
-			context.setFillStyle('#fff')
-			context.setFontSize(10)
-			context.fillText(`照片共${ this.imgList.length }张`, 100 * rpx, 192 * rpx)
+			context.setFillStyle('#fff');
+			context.setFontSize(10);
+			context.fillText(`照片共${ this.imgList.length }张`, 100 * rpx, 192 * rpx);
 
 			// context.drawImage(concatStr + this.staticImg[2], 4 * rpx, (78 + 7 * 18) * rpx, 52 * rpx, 15 * rpx)
 
-			context.setFillStyle('#000')
-			context.setFontSize(8)
-			context.fillText('圆角矩形选区shjdfhjhfshjshfjsdhfjshfjsdhfjdshfdsjhfsjfsd', 10 * rpx, (78 + 7 * 18 + 28) * rpx, 400 * rpx)
+			context.setFillStyle('#000');
+			context.setFontSize(8);
+			context.fillText('圆角矩形选区shjdfhjhfshjshfjsdhfjshfjsdhfjdshfdsjhfsjfsd', 10 * rpx, (78 + 7 * 18 + 28) * rpx, 400 * rpx);
 
 			// context.drawImage(concatStr + this.staticImg[0], 4 * rpx, (78 + 7 * 18 + 42) * rpx, 98 * rpx, 15 * rpx)
 
-			context.setFillStyle('#000')
-			context.setFontSize(8)
-			context.fillText('圆角矩形选区', 10 * rpx, (78 + 7 * 18 + 70) * rpx)
+			context.setFillStyle('#000');
+			context.setFontSize(8);
+			context.fillText('圆角矩形选区', 10 * rpx, (78 + 7 * 18 + 70) * rpx);
 
 			// context.drawImage(concatStr + this.staticImg[4], 4 * rpx, (78 + 7 * 18 + 84) * rpx, 69 * rpx, 15 * rpx)
 
-			context.fillStyle = '#fff'
-			context.fillRect(3, (78 + 7 * 18 + 98) * rpx, 152 * rpx, 20 * rpx)
+			context.fillStyle = '#fff';
+			context.fillRect(3, (78 + 7 * 18 + 98) * rpx, 152 * rpx, 20 * rpx);
 
 			// context.drawImage(concatStr + this.staticImg[1], 0, (78 + 7 * 18 + 110) * rpx, 158 * rpx, 82 * rpx)
 
-			context.fillStyle = '#000'
-			context.setFontSize(8)
-			context.fillText('品种：中华田园猫', 10 * rpx, (78 + 7 * 18 + 112) * rpx)
-			context.fillText('性别：MM', 10 * rpx, (78 + 7 * 18 + 122) * rpx)
-			context.fillText('年龄：0-3个月', 10 * rpx, (78 + 7 * 18 + 132) * rpx)
-			context.fillText('坐标：中华田园猫', 10 * rpx, (78 + 7 * 18 + 142) * rpx)
-			context.fillText('联系人：请在小程序内', 10 * rpx, (78 + 7 * 18 + 152) * rpx)
+			context.fillStyle = '#000';
+			context.setFontSize(8);
+			context.fillText('品种：中华田园猫', 10 * rpx, (78 + 7 * 18 + 112) * rpx);
+			context.fillText('性别：MM', 10 * rpx, (78 + 7 * 18 + 122) * rpx);
+			context.fillText('年龄：0-3个月', 10 * rpx, (78 + 7 * 18 + 132) * rpx);
+			context.fillText('坐标：中华田园猫', 10 * rpx, (78 + 7 * 18 + 142) * rpx);
+			context.fillText('联系人：请在小程序内', 10 * rpx, (78 + 7 * 18 + 152) * rpx);
 
 			// context.drawImage(this.staticImg[8], 106 * rpx, (78 + 7 * 18 + 110) * rpx, 40 * rpx, 40 * rpx)
-			context.stroke()
-			context.draw()
+			context.stroke();
+			context.draw();
 
-			uni.hideLoading()
+			uni.hideLoading();
 		}
 
-		textFill (ctx, txt, top, lineHeight = 20) {
-			let rpx = this.screenWidth
-			const rowNum = 20 // 字数
-			while(txt) {
-				const fillTxt = txt.slice(0, rowNum)
-				ctx.fillText(fillTxt, 10 * rpx, top * rpx)
-				top += lineHeight
-				txt = txt.slice(rowNum)
+		textFill(ctx: any, txt: string, top: number, lineHeight: number = 20) {
+			let rpx = this.screenWidth;
+			const rowNum = 20; // 字数
+			while (txt) {
+				const fillTxt = txt.slice(0, rowNum);
+				ctx.fillText(fillTxt, 10 * rpx, top * rpx);
+				top += lineHeight;
+				txt = txt.slice(rowNum);
 			}
 
 		}
 
-		save () {
+		save() {
 			uni.canvasToTempFilePath({
 				canvasId: 'poster',
 				success: (res: any) => {
-					let tempFilePath = res.tempFilePath
+					let tempFilePath = res.tempFilePath;
 					uni.saveImageToPhotosAlbum({
 						filePath: tempFilePath,
 						success: () => {
 							uni.showToast({
 								title: '图片已保存到相册'
-							})
+							});
 						},
 						fail: (res) => {
 							uni.showToast({
 								title: res.errMsg,
 								icon: 'none',
 								duration: 2000
-							})
+							});
 						}
-					})
+					});
 				}
-			})
+			});
 		}
 
 		@Emit()
-		close () {}
+		close() {}
 
 		/**
 		 * 关闭海报
 		 */
-		closePoster () {
-			this.close()
+		closePoster() {
+			this.close();
 		}
 	}
 
