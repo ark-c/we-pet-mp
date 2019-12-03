@@ -52,7 +52,7 @@
 				this.imgList[0]
 			]
 			for (let i = 0; i < imgArr.length; i++) {
-				await this.dealImg(imgArr[i])
+				// await this.dealImg(imgArr[i])
 			}
 		}
 
@@ -83,39 +83,39 @@
 			const context = uni.createCanvasContext('poster', this)
 			let concatStr = '../../'
 			context.setFillStyle('transparent')
-			context.drawImage(concatStr + this.staticImg[7], 0, 0, 158 * rpx, 78 * rpx)
+			// context.drawImage(concatStr + this.staticImg[7], 0, 0, 158 * rpx, 78 * rpx)
 			let middleLength = 36
 			for (let i = 0; i < middleLength; i++) {
-				context.drawImage(concatStr + this.staticImg[3], 0, (78 + 7 * i) * rpx, 158 * rpx, 7 * rpx)
+				// context.drawImage(concatStr + this.staticImg[3], 0, (78 + 7 * i) * rpx, 158 * rpx, 7 * rpx)
 			}
 
 			context.setLineWidth(1)
 			context.setStrokeStyle('#434343')
 			context.strokeRect(6 * rpx, 78 * rpx, 146 * rpx, 120 * rpx)
-			context.drawImage(this.staticImg[9], 6 * rpx, 78 * rpx, 146 * rpx, 120 * rpx)
+			// context.drawImage(this.staticImg[9], 6 * rpx, 78 * rpx, 146 * rpx, 120 * rpx)
 
 			context.setFillStyle('#fff')
 			context.setFontSize(10)
 			context.fillText(`照片共${ this.imgList.length }张`, 100 * rpx, 192 * rpx)
 
-			context.drawImage(concatStr + this.staticImg[2], 4 * rpx, (78 + 7 * 18) * rpx, 52 * rpx, 15 * rpx)
+			// context.drawImage(concatStr + this.staticImg[2], 4 * rpx, (78 + 7 * 18) * rpx, 52 * rpx, 15 * rpx)
 
 			context.setFillStyle('#000')
 			context.setFontSize(8)
-			context.fillText('圆角矩形选区', 10 * rpx, (78 + 7 * 18 + 28) * rpx)
+			context.fillText('圆角矩形选区shjdfhjhfshjshfjsdhfjshfjsdhfjdshfdsjhfsjfsd', 10 * rpx, (78 + 7 * 18 + 28) * rpx, 400 * rpx)
 
-			context.drawImage(concatStr + this.staticImg[0], 4 * rpx, (78 + 7 * 18 + 42) * rpx, 98 * rpx, 15 * rpx)
+			// context.drawImage(concatStr + this.staticImg[0], 4 * rpx, (78 + 7 * 18 + 42) * rpx, 98 * rpx, 15 * rpx)
 
 			context.setFillStyle('#000')
 			context.setFontSize(8)
 			context.fillText('圆角矩形选区', 10 * rpx, (78 + 7 * 18 + 70) * rpx)
 
-			context.drawImage(concatStr + this.staticImg[4], 4 * rpx, (78 + 7 * 18 + 84) * rpx, 69 * rpx, 15 * rpx)
+			// context.drawImage(concatStr + this.staticImg[4], 4 * rpx, (78 + 7 * 18 + 84) * rpx, 69 * rpx, 15 * rpx)
 
 			context.fillStyle = '#fff'
 			context.fillRect(3, (78 + 7 * 18 + 98) * rpx, 152 * rpx, 20 * rpx)
 
-			context.drawImage(concatStr + this.staticImg[1], 0, (78 + 7 * 18 + 110) * rpx, 158 * rpx, 82 * rpx)
+			// context.drawImage(concatStr + this.staticImg[1], 0, (78 + 7 * 18 + 110) * rpx, 158 * rpx, 82 * rpx)
 
 			context.fillStyle = '#000'
 			context.setFontSize(8)
@@ -125,11 +125,23 @@
 			context.fillText('坐标：中华田园猫', 10 * rpx, (78 + 7 * 18 + 142) * rpx)
 			context.fillText('联系人：请在小程序内', 10 * rpx, (78 + 7 * 18 + 152) * rpx)
 
-			context.drawImage(this.staticImg[8], 106 * rpx, (78 + 7 * 18 + 110) * rpx, 40 * rpx, 40 * rpx)
+			// context.drawImage(this.staticImg[8], 106 * rpx, (78 + 7 * 18 + 110) * rpx, 40 * rpx, 40 * rpx)
 			context.stroke()
 			context.draw()
 
 			uni.hideLoading()
+		}
+
+		textFill (ctx, txt, top, lineHeight = 20) {
+			let rpx = this.screenWidth
+			const rowNum = 20 // 字数
+			while(txt) {
+				const fillTxt = txt.slice(0, rowNum)
+				ctx.fillText(fillTxt, 10 * rpx, top * rpx)
+				top += lineHeight
+				txt = txt.slice(rowNum)
+			}
+
 		}
 
 		save () {
