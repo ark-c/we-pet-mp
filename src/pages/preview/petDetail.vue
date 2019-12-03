@@ -211,11 +211,12 @@
 		}
 
 		onShareAppMessage (res: any) {
+			this.handleShare()
 			return {
 				title: '布丁领养',
 				path: `/pages/preview/petDetail?petId=${ this.petId }&source=share`,
-				success: () => {   // TODO 微信小程序不支持分享的回调了，下边的代码不执行
-					this.handleShare()
+				success: () => {
+
 				}
 			}
 		}
