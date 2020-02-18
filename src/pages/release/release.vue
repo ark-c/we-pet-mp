@@ -86,8 +86,9 @@
 						<radio :value="3">有偿</radio>
 					</radio-group>
 				</view>
-				<view class="line">
+				<view class="line" v-if="releasePetInfo.petCostAdoption === 2'">
 					<label>押金金额</label>
+					<input v-model="releasePetInfo.petDepositAmount" placeholder-class="placeholder" placeholder="输入押金金额" type="number">
 				</view>
 			</view>
 		</view>
@@ -160,10 +161,10 @@
 		changePicker($event: any, name: string) {
 			switch (name) {
 				case 'area':
-					[this.releasePetInfo.petProvince, this.releasePetInfo.petCity, this.releasePetInfo.petDistrict] = $event
-					break
+					// [this.releasePetInfo.petProvince, this.releasePetInfo.petCity, this.releasePetInfo.petDistrict] = $event;
+					break;
 				default:
-					break
+					break;
 			}
 
 		};
